@@ -3,3 +3,10 @@ node_modules/
 
 dist/
 build/
+.agents
+.claude
+.cursor
+.devin
+prisma-next.md
+migrations/
+.vscode/
