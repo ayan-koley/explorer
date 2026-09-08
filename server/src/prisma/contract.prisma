@@ -1,0 +1,98 @@
+// use prisma-next
+
+enum Provider {
+  @@type("pg/text@1")
+  Local    = "local"
+  Google  = "google"
+  Github = "github"
+}
+
+enum MessageType {
+  @@type("pg/text@1")
+  Text = "text"
+  Image = "image"
+  Video = "video"
+  Voice = "voice"
+  File = "file"
+}
+
+
+model User {
+  id  Int @id @default(autoincrement())
+  username String
+  full_name String
+  email String  @unique
+  password_hash String
+  avatar_url String
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  user_auth_provider User_Auth_Provider[]
+  Direct_message Direct_message[]
+  message_receipt Message_receipt[]
+  Direct_conversation_member Direct_conversation_member[]
+
+
+}
+
+
+model User_Auth_Provider {
+  id  Int @id @default(autoincrement())
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  provider Provider
+  provider_user_id String?
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+model Direct_conversation {
+  id Int @id @default(autoincrement())
+  createdAt TimestamptzString @default(now())
+  last_message_at temporal.updatedAtString()
+
+  direct_message Direct_message[]
+  direct_conversation_member Direct_conversation_member[]
+}
+
+model Direct_message {
+  id Int @id @default(autoincrement())
+  conversationId Int
+  senderId Int
+  content String
+  message_type MessageType @default(Text)
+  reply_to_message_id Int?
+  createdAt TimestamptzString @default(now())
+  edited_at temporal.updatedAtString()
+  deleted_at temporal.updatedAtString()
+
+  conversation Direct_conversation @relation(fields: [conversationId], references: [id])
+  sender User @relation(fields: [senderId], references: [id])
+  reply_to_message Direct_message? @relation("MessageReplies", fields: [reply_to_message_id], references: [id])
+
+  replies Direct_message[] @relation("MessageReplies")
+  message_receipt Message_receipt[]
+}
+
+model Message_receipt {
+  @@id([message_id, user_id])
+
+  message_id Int
+  user_id Int
+  deliverd_at temporal.updatedAtString()
+  seen_at temporal.updatedAtString()
+
+  message Direct_message @relation(fields: [message_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model Direct_conversation_member {
+  conversation_id Int
+  user_id Int
+  joined_at TimestamptzString @default(now())
+  last_read_message_id Int
+
+  conversation Direct_conversation @relation(fields: [conversation_id], references: [id])
+  last_read_message Direct_message @relation(fields: [last_read_message_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
+}
