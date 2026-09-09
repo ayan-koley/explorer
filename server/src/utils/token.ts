@@ -1,5 +1,5 @@
 // utils/token.ts
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 
 interface User {
     id: Number,
@@ -7,8 +7,14 @@ interface User {
     email?: String,
     username: String
 }
+interface UserJwtpayload extends JwtPayload {
+    id: Number,
+    full_name: String,
+    email?: String,
+    username: String
+}
 
-export function generateAccessToken(payload: User) {
+export function generateAccessToken(payload: User): String {
     const accessToken_secret = process.env.JWT_ACCESS_TOKEN_SECRET;
 
     if(!accessToken_secret) {
@@ -20,7 +26,7 @@ export function generateAccessToken(payload: User) {
     return accessToken;
 }
 
-export function generateRefreshToken(payload: User) {
+export function generateRefreshToken(payload: User): String {
      const refreshToken_secret = process.env.JWT_REFRESH_TOKEN_SECRET;
 
     if(!refreshToken_secret) {
@@ -32,15 +38,15 @@ export function generateRefreshToken(payload: User) {
     return refreshToken;
 }
 
-export function verifyAccessToken(token: string) {
+export function verifyAccessToken(token: string): User {
     const accessToken_secret = process.env.JWT_ACCESS_TOKEN_SECRET;
 
     if(!accessToken_secret) {
         throw new Error('accesstoken secret is missing');
     }
-    const user = jwt.verify(token, accessToken_secret);
+    const user = jwt.verify(token, accessToken_secret) as UserJwtpayload;
 
-    if(!user) {
+    if(typeof user === 'string' || !user) {
         throw new Error("Invalid accesstoken ")
     }
     return user;
