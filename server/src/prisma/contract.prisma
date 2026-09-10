@@ -21,9 +21,9 @@ model User {
   id  Int @id @default(autoincrement())
   username String
   full_name String
-  email String  @unique
-  password_hash String
-  avatar_url String
+  email String?  @unique
+  password_hash String?
+  avatar_url String?
   createdAt TimestamptzString @default(now())
   updatedAt temporal.updatedAtString()
 
@@ -31,7 +31,7 @@ model User {
   Direct_message Direct_message[]
   message_receipt Message_receipt[]
   Direct_conversation_member Direct_conversation_member[]
-
+  refreshToken RefreshToken[]
 
 }
 
@@ -49,7 +49,7 @@ model User_Auth_Provider {
 model Direct_conversation {
   id Int @id @default(autoincrement())
   createdAt TimestamptzString @default(now())
-  last_message_at temporal.updatedAtString()
+  last_message_at DateTime
 
   direct_message Direct_message[]
   direct_conversation_member Direct_conversation_member[]
@@ -63,8 +63,8 @@ model Direct_message {
   message_type MessageType @default(Text)
   reply_to_message_id Int?
   createdAt TimestamptzString @default(now())
-  edited_at temporal.updatedAtString()
-  deleted_at temporal.updatedAtString()
+  edited_at DateTime?
+  deleted_at DateTime?
 
   conversation Direct_conversation @relation(fields: [conversationId], references: [id])
   sender User @relation(fields: [senderId], references: [id])
@@ -79,8 +79,8 @@ model Message_receipt {
 
   message_id Int
   user_id Int
-  deliverd_at temporal.updatedAtString()
-  seen_at temporal.updatedAtString()
+  deliverd_at DateTime
+  seen_at DateTime?
 
   message Direct_message @relation(fields: [message_id], references: [id])
   user User @relation(fields: [user_id], references: [id])
@@ -90,9 +90,19 @@ model Direct_conversation_member {
   conversation_id Int
   user_id Int
   joined_at TimestamptzString @default(now())
-  last_read_message_id Int
+  last_read_message_id Int?
 
   conversation Direct_conversation @relation(fields: [conversation_id], references: [id])
   last_read_message Direct_message @relation(fields: [last_read_message_id], references: [id])
   user User @relation(fields: [user_id], references: [id])
+}
+
+model RefreshToken {
+  id Int @id @default(autoincrement())
+  token_id String @unique
+  user_id Int
+  expires_at DateTime
+  revoked_at DateTime?
+
+  user User @relation(fields: [userId], references: [id])
 }
