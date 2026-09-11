@@ -1,20 +1,21 @@
 // utils/token.ts
 import jwt, { JwtPayload } from 'jsonwebtoken'
+import crypto from 'crypto'
 
 interface User {
-    id: Number,
-    full_name: String,
-    email?: String,
-    username: String
+    id: number,
+    full_name: string,
+    email?: string,
+    username: string
 }
 interface UserJwtpayload extends JwtPayload {
-    id: Number,
-    full_name: String,
-    email?: String,
-    username: String
+    id: number,
+    full_name: string,
+    email?: string,
+    username: string
 }
 
-export function generateAccessToken(payload: User): String {
+export function generateAccessToken(payload: User): string {
     const accessToken_secret = process.env.JWT_ACCESS_TOKEN_SECRET;
 
     if(!accessToken_secret) {
@@ -26,16 +27,23 @@ export function generateAccessToken(payload: User): String {
     return accessToken;
 }
 
-export function generateRefreshToken(payload: User): String {
+export function generateRefreshToken(payload: {id: number}): {refreshToken: string, jti: string} {
      const refreshToken_secret = process.env.JWT_REFRESH_TOKEN_SECRET;
 
     if(!refreshToken_secret) {
         throw new Error('refreshtoken secret is missing');
     }
 
-    const refreshToken = jwt.sign(payload, refreshToken_secret);
+    const jti = crypto.randomUUID();
+    const refreshToken = jwt.sign(payload, refreshToken_secret, {
+        expiresIn: '15d',
+        jwtid: jti
+    });
 
-    return refreshToken;
+    return {
+        refreshToken,
+        jti
+    };
 }
 
 export function verifyAccessToken(token: string): User {
