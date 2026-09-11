@@ -104,5 +104,5 @@ model RefreshToken {
   expires_at DateTime
   revoked_at DateTime?
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [user_id], references: [id])
 }
