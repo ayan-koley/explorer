@@ -93,8 +93,38 @@ const signOutUser = asyncHandler(async(req: Request, res: Response) => {
     )
 })
 
+const refreshAccessToken = asyncHandler(async(req: Request, res: Response) => {
+    const token = req.token;
+
+    const refresh = await db.orm.public.RefreshToken.where({token_id: token?.jti}).all();
+
+    if(refresh[0].revoked_at) {
+        return res.status(400).json(
+            ApiResponse.error('Invalid refresh token')
+        )
+    }
+
+    const [user] = await db.orm.public.User.where({id: refresh[0].user_id}).all();
+
+    const accessToken = generateAccessToken(
+        {
+            id: user.id,
+            full_name: user.full_name,
+            username: user.username
+        }
+    )
+
+    return res.status(200)
+    .cookie('accessToken', accessToken, {maxAge: 7 * 60 * 60 * 1000, httpOnly: true, secure: true})
+    .json(
+        ApiResponse.success(null, "access token generate successfully")
+    )
+
+})
+
 export {
     signUpUser,
     signInUser,
-    signOutUser
+    signOutUser,
+    refreshAccessToken
 }
