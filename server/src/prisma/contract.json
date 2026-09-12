@@ -100,7 +100,7 @@
               "last_message_at": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               }
@@ -276,14 +276,14 @@
               "deleted_at": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
               "edited_at": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -438,7 +438,7 @@
               "deliverd_at": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -452,7 +452,7 @@
               "seen_at": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -520,7 +520,7 @@
               "expires_at": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -534,7 +534,7 @@
               "revoked_at": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -882,7 +882,7 @@
                   "nullable": false
                 },
                 "last_message_at": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": false
                 }
@@ -1030,12 +1030,12 @@
                   "nullable": false
                 },
                 "deleted_at": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": true
                 },
                 "edited_at": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": true
                 },
@@ -1160,7 +1160,7 @@
             "message_receipt": {
               "columns": {
                 "deliverd_at": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -1170,7 +1170,7 @@
                   "nullable": false
                 },
                 "seen_at": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": true
                 },
@@ -1243,7 +1243,7 @@
             "refreshToken": {
               "columns": {
                 "expires_at": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -1257,7 +1257,7 @@
                   "nullable": false
                 },
                 "revoked_at": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": true
                 },
@@ -1494,7 +1494,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "6e03bfdaf57930fbc641d08aa0a6e0a0a090c360ffeb1b6f1bbead581f951931"
+    "storageHash": "6baa0511ec9f339099f88dc274b26bf97ed3371e246dcbf5ed9b2759ec7d28e5"
   },
   "execution": {
     "executionHash": "a0b81cda3ae48e8fd834afe799bc38a3c76f05cd953796b3e67b6183a902e79d",
