@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction } from "express";
-import { verifyAccessToken } from "../utils/token";
-import {TokenExpiredError} from 'jsonwebtoken'
-import { ApiResponse } from "../utils";
+import { verifyAccessToken } from "../utils/token.js";
+import jwt from 'jsonwebtoken'
+import { ApiResponse } from "../utils/index.js";
 
 export const verifyJWT = async(req: Request, res: Response, next: NextFunction) => {
     try {
@@ -18,7 +18,7 @@ export const verifyJWT = async(req: Request, res: Response, next: NextFunction) 
         next();
 
     } catch (err: any) {
-        if(err instanceof TokenExpiredError) {
+        if(err instanceof jwt.TokenExpiredError) {
             return res.status(401).json(
                 ApiResponse.error(err.message)
             )
