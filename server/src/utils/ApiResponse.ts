@@ -14,7 +14,7 @@ export class ApiResponse<T = any> {
     }
 
     static error(message: string | null):ApiResponse<null> {
-        return new ApiResponse(true, null, message);
+        return new ApiResponse(false, null, message);
     }
-    
+
 }
