@@ -1,5 +1,5 @@
-import { asyncHandler } from "./asyncHandler";
-import { ApiResponse } from "./ApiResponse";
+import { asyncHandler } from "./asyncHandler.js";
+import { ApiResponse } from "./ApiResponse.js";
 
 export {
     asyncHandler,
