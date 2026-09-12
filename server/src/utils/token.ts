@@ -59,3 +59,19 @@ export function verifyAccessToken(token: string): User {
     }
     return user;
 }
+export function verifyRefreshToken(token: string): {id: number, jti: string} {
+    const refreshToken_secret = process.env.JWT_REFRESH_TOKEN_SECRET;
+
+    if(!refreshToken_secret) {
+        throw new Error('refreshToken secret is missing');
+    }
+    const decode = jwt.verify(token, refreshToken_secret);
+
+    if(typeof decode === 'string' || !decode) {
+        throw new Error("Invalid RefreshToken")
+    }
+    return {
+        id: decode.id,
+        jti: decode.jti!
+    };
+}
