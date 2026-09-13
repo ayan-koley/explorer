@@ -49,7 +49,7 @@ model User_Auth_Provider {
 model Direct_conversation {
   id Int @id @default(autoincrement())
   createdAt TimestamptzString @default(now())
-  last_message_at TimestamptzString
+  last_message_at TimestamptzString?
 
   direct_message Direct_message[]
   direct_conversation_member Direct_conversation_member[]
