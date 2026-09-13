@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'6baa0511ec9f339099f88dc274b26bf97ed3371e246dcbf5ed9b2759ec7d28e5'>;
+  StorageHashBase<'d2932b21a4cdf147e54b027809b446384383ce0e99c170a324efebd9122d94bf'>;
 export type ExecutionHash =
   ExecutionHashBase<'a0b81cda3ae48e8fd834afe799bc38a3c76f05cd953796b3e67b6183a902e79d'>;
 export type ProfileHash =
@@ -244,7 +244,7 @@ export type FieldOutputTypes = {
     readonly Direct_conversation: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
-      readonly last_message_at: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly last_message_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
     };
     readonly Direct_conversation_member: {
       readonly conversation_id: CodecTypes['pg/int4@1']['output'];
@@ -301,7 +301,7 @@ export type FieldInputTypes = {
     readonly Direct_conversation: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
-      readonly last_message_at: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly last_message_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
     };
     readonly Direct_conversation_member: {
       readonly conversation_id: CodecTypes['pg/int4@1']['input'];
@@ -358,7 +358,7 @@ export type StorageColumnTypes = {
     readonly direct_conversation: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
-      readonly last_message_at: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly last_message_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
     };
     readonly direct_conversation_member: {
       readonly conversation_id: CodecTypes['pg/int4@1']['output'];
@@ -415,7 +415,7 @@ export type StorageColumnInputTypes = {
     readonly direct_conversation: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
-      readonly last_message_at: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly last_message_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
     };
     readonly direct_conversation_member: {
       readonly conversation_id: CodecTypes['pg/int4@1']['input'];
@@ -505,7 +505,7 @@ type ContractBase = Omit<
                 readonly last_message_at: {
                   readonly nativeType: 'timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
-                  readonly nullable: false;
+                  readonly nullable: true;
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -1019,7 +1019,7 @@ type ContractBase = Omit<
                 };
               };
               readonly last_message_at: {
-                readonly nullable: false;
+                readonly nullable: true;
                 readonly type: {
                   readonly kind: 'scalar';
                   readonly codecId: 'pg/timestamptz-string@1';
