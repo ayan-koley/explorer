@@ -435,8 +435,15 @@
           },
           "Message_receipt": {
             "fields": {
-              "deliverd_at": {
+              "createdAt": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "deliverd_at": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
@@ -498,6 +505,9 @@
             },
             "storage": {
               "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
                 "deliverd_at": {
                   "column": "deliverd_at"
                 },
@@ -1159,10 +1169,19 @@
             },
             "message_receipt": {
               "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
                 "deliverd_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
-                  "nullable": false
+                  "nullable": true
                 },
                 "message_id": {
                   "codecId": "pg/int4@1",
@@ -1494,7 +1513,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "d2932b21a4cdf147e54b027809b446384383ce0e99c170a324efebd9122d94bf"
+    "storageHash": "582b47d60e98594d60aa4355bd1f51bfd4ad72804f39f7df2c02ef83bc77ef80"
   },
   "execution": {
     "executionHash": "a0b81cda3ae48e8fd834afe799bc38a3c76f05cd953796b3e67b6183a902e79d",
