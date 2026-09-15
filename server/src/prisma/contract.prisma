@@ -79,8 +79,10 @@ model Message_receipt {
 
   message_id Int
   user_id Int
-  deliverd_at TimestamptzString
+  deliverd_at TimestamptzString?
   seen_at TimestamptzString?
+
+  createdAt TimestamptzString @default(now())
 
   message Direct_message @relation(fields: [message_id], references: [id])
   user User @relation(fields: [user_id], references: [id])
