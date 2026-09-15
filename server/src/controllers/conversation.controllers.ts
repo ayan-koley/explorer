@@ -1,4 +1,4 @@
-import { conversationService } from "../services/conversation.services.js";
+import { conversationService } from "../services/conversation.service.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Request, Response } from "express";
