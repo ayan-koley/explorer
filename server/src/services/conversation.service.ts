@@ -105,6 +105,51 @@ export default class ConversationService {
       })
   }
 
+  async isValidConversation(conversationId: number) {
+    const conv = await db.orm.public.Direct_conversation.where({id: conversationId}).all();
+
+    return conv.length > 0 ? true : false;
+  }
+
+  async getConversationsOfUser(userId: number) {
+    // find conversation using userId --> other user conversations and there messages
+    const conversationsList = await db.orm.public.Direct_conversation_member
+    .where({user_id: userId})
+    .include("conversation", (c) => 
+      c
+        .include("direct_conversation_member", (dcm) => dcm.where((u) => u.user_id.neq(userId)))
+        .include("direct_message", (msg) => msg.orderBy((m) => m.createdAt.desc()).limit(1))
+    )
+    .all();
+
+    return conversationsList;
+  }
+
+  async getConversationById(conversationId: number) {
+    const convData = await db.orm.public.Direct_conversation.where({id: conversationId})
+    .include("direct_conversation_member", (mem) => 
+      mem.include("user", (user) => 
+        user.select("id", "avatar_url", "createdAt", "email", "full_name", "updatedAt", "username")))
+    .include("direct_message", (msg) => msg.orderBy((m) => m.createdAt.desc()).limit(1))
+    .all()
+
+    return convData;
+  }
+
+  async updateConversationLastMessageTimeing(
+    {
+      conversationId,
+      last_message_at
+    }: {
+      conversationId: number,
+      last_message_at: string
+    }) {
+      return await db.orm.public.Direct_conversation.where({id: conversationId}).update({
+        last_message_at
+      });
+
+  } 
+
 //   // Remove a member
 }
 
