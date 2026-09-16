@@ -20,11 +20,13 @@ app.use(cookieParser())
 
 import authRoutes from './routes/auth.routes.js';
 import conversationsRoutes from './routes/conversations.routes.js';
+import messagesRoutes from './routes/message.routes.js';
 
 app.use("/api/v1/healthcheck", (req: Request, res: Response) => {
     return res.status(200).json({message: "work properly"})
 })
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/conversations", conversationsRoutes);
+app.use("/api/v1/messages", messagesRoutes);
 
 export default app;
