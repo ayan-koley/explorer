@@ -1,5 +1,6 @@
 import { db } from "../prisma/db.js";
 import { messageValidation } from "../validations/message.validations.js";
+import { conversationService } from "./conversation.service.js";
 
 export default class MessageService {
     async createMessage(
@@ -34,23 +35,30 @@ export default class MessageService {
             throw new Error("You are not a member of this conversations.")
         }
 
-        return await db.orm.public.Direct_message.create({
+        const message = await db.orm.public.Direct_message.create({
             content: content,
             conversationId: conversationId,
             senderId: senderId
         })
+
+        await conversationService.updateConversationLastMessageTimeing({
+            conversationId,
+            last_message_at: message.createdAt
+        })
+
+        return message;
     }
 
     async getMessages({
         conversationId,
         userId,
         limit = 50,
-        offset = 1
+        offset = 0
     }: {
         conversationId: number;
         userId: number;
-        limit: number;
-        offset: number;
+        limit?: number;
+        offset?: number;
     }
     ) {
         const isMember = await this.checkConversationAccess({conversationId, userId});
@@ -62,9 +70,9 @@ export default class MessageService {
        return await db.orm.public.Direct_message.where({
             conversationId
         }).limit(limit)
-        .offset(limit * offset)
         .orderBy((m) => m.createdAt.desc())
-        .all();
+        .offset(offset)
+        .all()
     }
 
     async deleteMessage({messageId, userId}: {messageId: number, userId: number}) {
