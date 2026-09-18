@@ -4,6 +4,14 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
+    "channel": {
+      "model": "Channel",
+      "namespace": "public"
+    },
+    "channel_message": {
+      "model": "Channel_message",
+      "namespace": "public"
+    },
     "direct_conversation": {
       "model": "Direct_conversation",
       "namespace": "public"
@@ -20,8 +28,32 @@
       "model": "Message_receipt",
       "namespace": "public"
     },
+    "permission": {
+      "model": "Permission",
+      "namespace": "public"
+    },
     "refreshToken": {
       "model": "RefreshToken",
+      "namespace": "public"
+    },
+    "role": {
+      "model": "Role",
+      "namespace": "public"
+    },
+    "role_permision": {
+      "model": "Role_permision",
+      "namespace": "public"
+    },
+    "server": {
+      "model": "Server",
+      "namespace": "public"
+    },
+    "server_member": {
+      "model": "Server_member",
+      "namespace": "public"
+    },
+    "server_member_role": {
+      "model": "Server_member_role",
       "namespace": "public"
     },
     "user": {
@@ -31,12 +63,29 @@
     "user_Auth_Provider": {
       "model": "User_Auth_Provider",
       "namespace": "public"
+    },
+    "voice_session": {
+      "model": "Voice_session",
+      "namespace": "public"
     }
   },
   "domain": {
     "namespaces": {
       "public": {
         "enum": {
+          "ChannelType": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "TEXT",
+                "value": "text"
+              },
+              {
+                "name": "VOICE",
+                "value": "voice"
+              }
+            ]
+          },
           "MessageType": {
             "codecId": "pg/text@1",
             "members": [
@@ -78,9 +127,282 @@
                 "value": "github"
               }
             ]
+          },
+          "VisibilityType": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "PUBLIC",
+                "value": "public"
+              },
+              {
+                "name": "PRIVATE",
+                "value": "private"
+              }
+            ]
           }
         },
         "models": {
+          "Channel": {
+            "fields": {
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "position": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "server_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "type": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "ChannelType",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              }
+            },
+            "relations": {
+              "channel_mesasge": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "channel_id"
+                  ]
+                },
+                "to": {
+                  "model": "Channel_message",
+                  "namespace": "public"
+                }
+              },
+              "server": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "server_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Server",
+                  "namespace": "public"
+                }
+              },
+              "voice_session": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "channel_id"
+                  ]
+                },
+                "to": {
+                  "model": "Voice_session",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "created_at": {
+                  "column": "created_at"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "position": {
+                  "column": "position"
+                },
+                "server_id": {
+                  "column": "server_id"
+                },
+                "type": {
+                  "column": "type"
+                }
+              },
+              "namespaceId": "public",
+              "table": "channel"
+            }
+          },
+          "Channel_message": {
+            "fields": {
+              "channel_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "content": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "deleted_at": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "edited_at": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "reply_to_message_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "sender_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "channel": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "channel_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Channel",
+                  "namespace": "public"
+                }
+              },
+              "reply_message": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "reply_to_message_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Channel_message",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "sender_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "channel_id": {
+                  "column": "channel_id"
+                },
+                "content": {
+                  "column": "content"
+                },
+                "created_at": {
+                  "column": "created_at"
+                },
+                "deleted_at": {
+                  "column": "deleted_at"
+                },
+                "edited_at": {
+                  "column": "edited_at"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "reply_to_message_id": {
+                  "column": "reply_to_message_id"
+                },
+                "sender_id": {
+                  "column": "sender_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "channel_message"
+            }
+          },
           "Direct_conversation": {
             "fields": {
               "createdAt": {
@@ -525,6 +847,53 @@
               "table": "message_receipt"
             }
           },
+          "Permission": {
+            "fields": {
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "Role_permision": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "permission_id"
+                  ]
+                },
+                "to": {
+                  "model": "Role_permision",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "id": {
+                  "column": "id"
+                },
+                "name": {
+                  "column": "name"
+                }
+              },
+              "namespaceId": "public",
+              "table": "permission"
+            }
+          },
           "RefreshToken": {
             "fields": {
               "expires_at": {
@@ -600,6 +969,496 @@
               },
               "namespaceId": "public",
               "table": "refreshToken"
+            }
+          },
+          "Role": {
+            "fields": {
+              "color": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "position": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "server_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "role_permission": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "role_id"
+                  ]
+                },
+                "to": {
+                  "model": "Role_permision",
+                  "namespace": "public"
+                }
+              },
+              "server": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "server_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Server",
+                  "namespace": "public"
+                }
+              },
+              "server_member_role": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "role_id"
+                  ]
+                },
+                "to": {
+                  "model": "Server_member_role",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "color": {
+                  "column": "color"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "position": {
+                  "column": "position"
+                },
+                "server_id": {
+                  "column": "server_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "role"
+            }
+          },
+          "Role_permision": {
+            "fields": {
+              "permission_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "role_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "permission": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "permission_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Permission",
+                  "namespace": "public"
+                }
+              },
+              "role": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "role_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Role",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "permission_id": {
+                  "column": "permission_id"
+                },
+                "role_id": {
+                  "column": "role_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "role_permision"
+            }
+          },
+          "Server": {
+            "fields": {
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "icon_url": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "owner_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "visibility": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "VisibilityType",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              }
+            },
+            "relations": {
+              "channel": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "server_id"
+                  ]
+                },
+                "to": {
+                  "model": "Channel",
+                  "namespace": "public"
+                }
+              },
+              "role": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "server_id"
+                  ]
+                },
+                "to": {
+                  "model": "Role",
+                  "namespace": "public"
+                }
+              },
+              "server_member": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "server_id"
+                  ]
+                },
+                "to": {
+                  "model": "Server_member",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "owner_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "created_at": {
+                  "column": "created_at"
+                },
+                "icon_url": {
+                  "column": "icon_url"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "owner_id": {
+                  "column": "owner_id"
+                },
+                "visibility": {
+                  "column": "visibility"
+                }
+              },
+              "namespaceId": "public",
+              "table": "server"
+            }
+          },
+          "Server_member": {
+            "fields": {
+              "joined_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "nickname": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "server_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "user_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "server": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "server_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Server",
+                  "namespace": "public"
+                }
+              },
+              "server_member_role": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "server_id",
+                    "user_id"
+                  ],
+                  "targetFields": [
+                    "server_id",
+                    "user_id"
+                  ]
+                },
+                "to": {
+                  "model": "Server_member_role",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "user_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "joined_at": {
+                  "column": "joined_at"
+                },
+                "nickname": {
+                  "column": "nickname"
+                },
+                "server_id": {
+                  "column": "server_id"
+                },
+                "user_id": {
+                  "column": "user_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "server_member"
+            }
+          },
+          "Server_member_role": {
+            "fields": {
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "role_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "server_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "user_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "role": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "role_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Role",
+                  "namespace": "public"
+                }
+              },
+              "server_member": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "server_id",
+                    "user_id"
+                  ],
+                  "targetFields": [
+                    "server_id",
+                    "user_id"
+                  ]
+                },
+                "to": {
+                  "model": "Server_member",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "id": {
+                  "column": "id"
+                },
+                "role_id": {
+                  "column": "role_id"
+                },
+                "server_id": {
+                  "column": "server_id"
+                },
+                "user_id": {
+                  "column": "user_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "server_member_role"
             }
           },
           "User": {
@@ -692,6 +1551,36 @@
                   "namespace": "public"
                 }
               },
+              "channel_mesasge": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "sender_id"
+                  ]
+                },
+                "to": {
+                  "model": "Channel_message",
+                  "namespace": "public"
+                }
+              },
+              "channel_message": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "sender_id"
+                  ]
+                },
+                "to": {
+                  "model": "Channel_message",
+                  "namespace": "public"
+                }
+              },
               "message_receipt": {
                 "cardinality": "1:N",
                 "on": {
@@ -722,6 +1611,36 @@
                   "namespace": "public"
                 }
               },
+              "server": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "owner_id"
+                  ]
+                },
+                "to": {
+                  "model": "Server",
+                  "namespace": "public"
+                }
+              },
+              "server_member": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "user_id"
+                  ]
+                },
+                "to": {
+                  "model": "Server_member",
+                  "namespace": "public"
+                }
+              },
               "user_auth_provider": {
                 "cardinality": "1:N",
                 "on": {
@@ -734,6 +1653,21 @@
                 },
                 "to": {
                   "model": "User_Auth_Provider",
+                  "namespace": "public"
+                }
+              },
+              "voice_session": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "user_id"
+                  ]
+                },
+                "to": {
+                  "model": "Voice_session",
                   "namespace": "public"
                 }
               }
@@ -861,6 +1795,128 @@
               "namespaceId": "public",
               "table": "user_Auth_Provider"
             }
+          },
+          "Voice_session": {
+            "fields": {
+              "camera_enabled": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "channel_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "joined_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "left_at": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "microphone_enabled": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "screen_sharing": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "user_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "channel": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "channel_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Channel",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "user_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "camera_enabled": {
+                  "column": "camera_enabled"
+                },
+                "channel_id": {
+                  "column": "channel_id"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "joined_at": {
+                  "column": "joined_at"
+                },
+                "left_at": {
+                  "column": "left_at"
+                },
+                "microphone_enabled": {
+                  "column": "microphone_enabled"
+                },
+                "screen_sharing": {
+                  "column": "screen_sharing"
+                },
+                "user_id": {
+                  "column": "user_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "voice_session"
+            }
           }
         }
       }
@@ -871,6 +1927,233 @@
       "public": {
         "entries": {
           "table": {
+            "channel": {
+              "checks": [
+                {
+                  "expression": "\"type\" IN ('text', 'voice')",
+                  "name": "channel_type_check_2beaabbc",
+                  "prefix": "channel_type_check"
+                }
+              ],
+              "columns": {
+                "created_at": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "position": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "server_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "type": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "text"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "ChannelType",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "server_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "channel"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "server"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "server_id"
+                  ],
+                  "name": "channel_server_id_idx_f26850fd",
+                  "prefix": "channel_server_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "channel_message": {
+              "columns": {
+                "channel_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "content": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "created_at": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "deleted_at": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "edited_at": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "reply_to_message_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "sender_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "channel_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "channel_message"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "channel"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "sender_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "channel_message"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "user"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "reply_to_message_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "channel_message"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "channel_message"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "channel_id"
+                  ],
+                  "name": "channel_message_channel_id_idx_b453dbf7",
+                  "prefix": "channel_message_channel_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "reply_to_message_id"
+                  ],
+                  "name": "channel_message_reply_to_message_id_idx_436a0c22",
+                  "prefix": "channel_message_reply_to_message_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "sender_id"
+                  ],
+                  "name": "channel_message_sender_id_idx_311853a4",
+                  "prefix": "channel_message_sender_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
             "direct_conversation": {
               "columns": {
                 "createdAt": {
@@ -1259,6 +2542,32 @@
               },
               "uniques": []
             },
+            "permission": {
+              "columns": {
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
             "refreshToken": {
               "columns": {
                 "expires_at": {
@@ -1328,6 +2637,419 @@
                 {
                   "columns": [
                     "token_id"
+                  ]
+                }
+              ]
+            },
+            "role": {
+              "columns": {
+                "color": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "position": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "server_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "server_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "role"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "server"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "server_id"
+                  ],
+                  "name": "role_server_id_idx_f26850fd",
+                  "prefix": "role_server_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "role_permision": {
+              "columns": {
+                "permission_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "role_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "role_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "role_permision"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "role"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "permission_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "role_permision"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "permission"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "permission_id"
+                  ],
+                  "name": "role_permision_permission_id_idx_909cec36",
+                  "prefix": "role_permision_permission_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "role_id"
+                  ],
+                  "name": "role_permision_role_id_idx_d9467c50",
+                  "prefix": "role_permision_role_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "role_id",
+                  "permission_id"
+                ]
+              },
+              "uniques": []
+            },
+            "server": {
+              "checks": [
+                {
+                  "expression": "\"visibility\" IN ('public', 'private')",
+                  "name": "server_visibility_check_b9e4faaa",
+                  "prefix": "server_visibility_check"
+                }
+              ],
+              "columns": {
+                "created_at": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "icon_url": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "owner_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "visibility": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "public"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "VisibilityType",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "owner_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "server"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "user"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "owner_id"
+                  ],
+                  "name": "server_owner_id_idx_ade9f347",
+                  "prefix": "server_owner_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "name"
+                  ]
+                }
+              ]
+            },
+            "server_member": {
+              "columns": {
+                "joined_at": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "nickname": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "server_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "user_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "server_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "server_member"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "server"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "user_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "server_member"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "user"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "server_id"
+                  ],
+                  "name": "server_member_server_id_idx_f26850fd",
+                  "prefix": "server_member_server_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "user_id"
+                  ],
+                  "name": "server_member_user_id_idx_6c952402",
+                  "prefix": "server_member_user_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "server_id",
+                  "user_id"
+                ]
+              },
+              "uniques": []
+            },
+            "server_member_role": {
+              "columns": {
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "role_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "server_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "user_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "server_id",
+                      "user_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "server_member_role"
+                  },
+                  "target": {
+                    "columns": [
+                      "server_id",
+                      "user_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "server_member"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "role_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "server_member_role"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "role"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "role_id"
+                  ],
+                  "name": "server_member_role_role_id_idx_d9467c50",
+                  "prefix": "server_member_role_role_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "server_id",
+                    "user_id"
                   ]
                 }
               ]
@@ -1486,9 +3208,134 @@
                 ]
               },
               "uniques": []
+            },
+            "voice_session": {
+              "columns": {
+                "camera_enabled": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "channel_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "joined_at": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "left_at": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "microphone_enabled": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "screen_sharing": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "user_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "channel_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "voice_session"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "channel"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "user_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "voice_session"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "user"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "channel_id"
+                  ],
+                  "name": "voice_session_channel_id_idx_b453dbf7",
+                  "prefix": "voice_session_channel_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "user_id"
+                  ],
+                  "name": "voice_session_user_id_idx_6c952402",
+                  "prefix": "voice_session_user_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
             }
           },
           "valueSet": {
+            "ChannelType": {
+              "kind": "valueSet",
+              "values": [
+                "text",
+                "voice"
+              ]
+            },
             "MessageType": {
               "kind": "valueSet",
               "values": [
@@ -1506,6 +3353,13 @@
                 "google",
                 "github"
               ]
+            },
+            "VisibilityType": {
+              "kind": "valueSet",
+              "values": [
+                "public",
+                "private"
+              ]
             }
           }
         },
@@ -1513,7 +3367,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "582b47d60e98594d60aa4355bd1f51bfd4ad72804f39f7df2c02ef83bc77ef80"
+    "storageHash": "2513ae6743c2fc92259918c26f2c490a532ccf703e40afc17ac8b409500ee203"
   },
   "execution": {
     "executionHash": "a0b81cda3ae48e8fd834afe799bc38a3c76f05cd953796b3e67b6183a902e79d",

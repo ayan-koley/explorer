@@ -16,6 +16,18 @@ enum MessageType {
   File = "file"
 }
 
+enum VisibilityType {
+  @@type("pg/text@1")
+  PUBLIC = "public"
+  PRIVATE = "private"
+}
+
+enum ChannelType {
+  @@type("pg/text@1")
+  TEXT = "text"
+  VOICE = "voice"
+}
+
 
 model User {
   id  Int @id @default(autoincrement())
@@ -32,6 +44,11 @@ model User {
   message_receipt Message_receipt[]
   Direct_conversation_member Direct_conversation_member[]
   refreshToken RefreshToken[]
+  server Server[]
+  channel_message Channel_message[]
+  server_member Server_member[]
+  voice_session Voice_session[]
+  channel_mesasge Channel_message[]
 
 }
 
@@ -106,5 +123,117 @@ model RefreshToken {
   expires_at TimestamptzString
   revoked_at TimestamptzString?
 
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model Server {
+  id Int @id @default(autoincrement())
+  name String @unique
+  icon_url String?
+  owner_id Int
+  visibility VisibilityType @default(PUBLIC)
+  created_at TimestamptzString @default(now())
+
+  user User @relation(fields: [owner_id], references: [id])
+  channel Channel[]
+  role Role[]
+  server_member Server_member[]
+
+}
+
+model Channel {
+  id Int @id @default(autoincrement())
+  server_id Int
+  name String
+  type ChannelType @default(TEXT)
+  position Int?
+  created_at TimestamptzString @default(now())
+
+  server Server @relation(fields: [server_id], references: [id])
+  channel_mesasge Channel_message[]
+  voice_session Voice_session[]
+
+}
+
+model Channel_message {
+  id Int @id @default(autoincrement())
+  channel_id Int
+  sender_id Int
+  content String
+  reply_to_message_id Int
+  created_at TimestamptzString @default(now())
+  edited_at TimestamptzString?
+  deleted_at TimestamptzString?
+
+  channel Channel @relation(fields: [channel_id], references: [id])
+  user User @relation(fields: [sender_id], references: [id])
+  reply_message Channel_message @relation(fields: [reply_to_message_id], references: [id])
+}
+
+model Server_member {
+  server_id Int
+  user_id Int
+  nickname String?
+  joined_at TimestamptzString @default(now())
+
+  server Server @relation(fields: [server_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
+  server_member_role Server_member_role?
+
+  @@id([server_id, user_id])
+}
+
+model Role {
+  id Int @id @default(autoincrement())
+  server_id Int
+  name String
+  color String
+  position Int
+
+  server Server @relation(fields: [server_id], references: [id])
+  role_permission Role_permision[]
+  server_member_role Server_member_role[]
+
+}
+
+model Server_member_role {
+  id Int @id @default(autoincrement())
+  server_id Int
+  user_id Int
+  role_id Int
+
+  @@unique([server_id, user_id])
+
+  server_member Server_member @relation(fields: [server_id, user_id], references: [server_id, user_id])
+  role Role @relation(fields: [role_id], references: [id])
+}
+
+
+model Permission {
+  id Int @id @default(autoincrement())
+  name String?
+  Role_permision Role_permision[]
+}
+
+model Role_permision {
+  @@id([role_id, permission_id])
+  role_id Int
+  permission_id Int
+
+  role Role @relation(fields: [role_id], references: [id])
+  permission Permission @relation(fields: [permission_id], references: [id])
+}
+
+model Voice_session {
+  id Int @id @default(autoincrement())
+  channel_id Int
+  user_id Int
+  microphone_enabled Boolean @default(true)
+  camera_enabled Boolean @default(false)
+  screen_sharing Boolean @default(false)
+  joined_at TimestamptzString
+  left_at TimestamptzString?
+
+  channel Channel @relation(fields: [channel_id], references: [id])
   user User @relation(fields: [user_id], references: [id])
 }
