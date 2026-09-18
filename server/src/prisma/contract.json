@@ -311,7 +311,7 @@
                 }
               },
               "reply_to_message_id": {
-                "nullable": false,
+                "nullable": true,
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
@@ -2063,7 +2063,7 @@
                 "reply_to_message_id": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
-                  "nullable": false
+                  "nullable": true
                 },
                 "sender_id": {
                   "codecId": "pg/int4@1",
@@ -3367,7 +3367,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "2513ae6743c2fc92259918c26f2c490a532ccf703e40afc17ac8b409500ee203"
+    "storageHash": "0bb232b7fe6711cc3b448d49077a6ec86da8dcaf2d7bfbf9b441cf9de0952a31"
   },
   "execution": {
     "executionHash": "a0b81cda3ae48e8fd834afe799bc38a3c76f05cd953796b3e67b6183a902e79d",

@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'2513ae6743c2fc92259918c26f2c490a532ccf703e40afc17ac8b409500ee203'>;
+  StorageHashBase<'0bb232b7fe6711cc3b448d49077a6ec86da8dcaf2d7bfbf9b441cf9de0952a31'>;
 export type ExecutionHash =
   ExecutionHashBase<'a0b81cda3ae48e8fd834afe799bc38a3c76f05cd953796b3e67b6183a902e79d'>;
 export type ProfileHash =
@@ -254,7 +254,7 @@ export type FieldOutputTypes = {
       readonly channel_id: CodecTypes['pg/int4@1']['output'];
       readonly sender_id: CodecTypes['pg/int4@1']['output'];
       readonly content: CodecTypes['pg/text@1']['output'];
-      readonly reply_to_message_id: CodecTypes['pg/int4@1']['output'];
+      readonly reply_to_message_id: CodecTypes['pg/int4@1']['output'] | null;
       readonly created_at: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly edited_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
       readonly deleted_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
@@ -375,7 +375,7 @@ export type FieldInputTypes = {
       readonly channel_id: CodecTypes['pg/int4@1']['input'];
       readonly sender_id: CodecTypes['pg/int4@1']['input'];
       readonly content: CodecTypes['pg/text@1']['input'];
-      readonly reply_to_message_id: CodecTypes['pg/int4@1']['input'];
+      readonly reply_to_message_id: CodecTypes['pg/int4@1']['input'] | null;
       readonly created_at: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly edited_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly deleted_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
@@ -498,7 +498,7 @@ export type StorageColumnTypes = {
       readonly deleted_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
       readonly edited_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
-      readonly reply_to_message_id: CodecTypes['pg/int4@1']['output'];
+      readonly reply_to_message_id: CodecTypes['pg/int4@1']['output'] | null;
       readonly sender_id: CodecTypes['pg/int4@1']['output'];
     };
     readonly direct_conversation: {
@@ -619,7 +619,7 @@ export type StorageColumnInputTypes = {
       readonly deleted_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly edited_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
-      readonly reply_to_message_id: CodecTypes['pg/int4@1']['input'];
+      readonly reply_to_message_id: CodecTypes['pg/int4@1']['input'] | null;
       readonly sender_id: CodecTypes['pg/int4@1']['input'];
     };
     readonly direct_conversation: {
@@ -837,7 +837,7 @@ type ContractBase = Omit<
                 readonly reply_to_message_id: {
                   readonly nativeType: 'int4';
                   readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
+                  readonly nullable: true;
                 };
                 readonly created_at: {
                   readonly nativeType: 'timestamptz';
@@ -2010,7 +2010,7 @@ type ContractBase = Omit<
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly reply_to_message_id: {
-                readonly nullable: false;
+                readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
               readonly created_at: {
