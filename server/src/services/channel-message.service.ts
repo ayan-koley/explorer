@@ -1,4 +1,6 @@
 import { db } from "../prisma/db.js";
+import { channelService } from "./channel.service.js";
+import { servermemberService } from "./server-member.service.js";
 
 export class ChannelMessageService {
 
@@ -8,31 +10,15 @@ export class ChannelMessageService {
         content: string
     ) {
         // // 1. Check whether channel exists
-        // const channel = await db.orm.public.Channel.where({
-        //     id: channel_id
-        // })
-        // .select('id', 'server_id', 'type')
-        // .first()
-
-        // if (!channel) {
-        //     throw new Error("CHANNEL_NOT_FOUND");
-        // }
+        const channel = await channelService.getChannel(channel_id, user_id);
 
         // // 2. Only TEXT channels can receive messages
-        // if (channel.type !== "text") {
-        //     throw new Error("Messages can only be sent in text channels");
-        // }
+        if (channel.type !== "text") {
+            throw new Error("Messages can only be sent in text channels");
+        }
 
         // // 3. Check whether user belongs to the server
-        // const member = await db.orm.public.Server_member.where({
-        //     server_id: channel.server_id,
-        //     user_id
-        // }).first();
-
-
-        // if (!member) {
-        //     throw new Error("You are not a member of this server");
-        // }
+        const member = await servermemberService.requireMember({server_id: channel.server_id, user_id})
 
         // 4. Create message
         const message = await db.orm.public.Channel_message.create(
@@ -55,20 +41,9 @@ export class ChannelMessageService {
         // const take = Math.min(limit, 100);
 
         // // 1. Check channel
-        // const channel = await db.orm.public.Channel.where({
-        //     id: channel_id
-        // }).select("id", "server_id").first();
+        const channel = await channelService.getChannel(channel_id, user_id);
 
-        // if (!channel) {
-        //     throw new Error("Channel not found");
-        // }
-
-        // // 2. Check server membership
-        // const member = await servermemberService.isMember({server_id: channel.server_id, user_id})
-
-        // if (!member) {
-        //     throw new Error("You are not a member of this server");
-        // }
+        const member = await servermemberService.requireMember({server_id: channel.server_id, user_id})
 
         // // 3. Fetch messages
         const messages = await db.orm.public.Channel_message.where({
@@ -108,24 +83,15 @@ export class ChannelMessageService {
         content: string
     ) {
         // 1. Find message
-        // const message = await db.orm.public.Channel_message
-        // .where({
-        //     id: message_id
-        // })
-        // .first();
-
-        // if (!message) {
-        //     throw new Error( "Message not found");
-        // }
-
+        const message = await this.getMessage(message_id);
 
         // // 3. Only message sender can edit
-        // if (message.sender_id !== user_id) {
-        //     throw new Error("You can only edit your own messages");
-        // }
+        if (message.sender_id !== user_id) {
+            throw new Error("You can only edit your own messages");
+        }
 
         // 4. Update message
-        const updated_message =
+        const edited_message =
             await db.orm.public.Channel_message
             .where({
                 id: message_id
@@ -135,13 +101,21 @@ export class ChannelMessageService {
                 edited_at: new Date(Date.now()).toISOString()
             })
 
-        return updated_message;
+        return edited_message;
     }
 
     async deleteMessage(
         message_id: number,
         user_id: number
     ) {
+
+        const message = await this.getMessage(message_id);
+
+        // // 3. Only message sender can edit
+        if (message.sender_id !== user_id) {
+            throw new Error("You can only edit your own messages");
+        }
+
         const deleted_message = await db.orm.public.Channel_message.where(
             {
                 id: message_id,
@@ -153,4 +127,4 @@ export class ChannelMessageService {
 }
 
 
-export const message_service = new ChannelMessageService();
+export const messageService = new ChannelMessageService();
