@@ -1,4 +1,6 @@
 import { db } from "../prisma/db.js";
+import { servermemberService } from "./server-member.service.js";
+import { serverService } from "./server.service.js";
 
 export class ChannelService {
 
@@ -7,38 +9,31 @@ export class ChannelService {
         {
             server_id,
             name,
-            type
+            type,
+            position,
+            user_id
         }: {
             server_id: number,
             name: string,
-            type: "text" | "voice"
+            type: "text" | "voice",
+            position?: number,
+            user_id: number
         }
     ) {
 
-        // 1. Check whether server exists
-        // const server = await db.orm.public.Server
-        //     .where({ id: server_id })
-        //     .first();
-
-        // if (!server) {
-        //     throw new Error("SERVER_NOT_FOUND");
-        // }
-
-        // 2. Check whether user is a member of server
-        // const member = await servermemberService.isMember({
-        //     server_id,
-        //     user_id
-        // });
-
-        // if (!member) {
-        //     throw new Error("You are not a member of this server");
-        // }
+        await serverService.getServer(
+            {
+                server_id,
+                user_id
+            }
+        )
 
         // 3. Create channel
         const channel = await db.orm.public.Channel.create({
             server_id,
             name,
-            type
+            type,
+            position
         });
 
         if(!channel) {
@@ -55,26 +50,13 @@ export class ChannelService {
         user_id: number
     ) {
 
-        // 1. Check server
-        // const server = await db.orm.public.Server
-        //     .where({ id: server_id })
-        //     .first();
+        await serverService.getServer(
+            {
+                server_id,
+                user_id
+            }
+        )
 
-        // if (!server) {
-        //     throw new Error("SERVER_NOT_FOUND");
-        // }
-
-        // 2. Check membership
-        // const member = await servermemberService.isMember({
-        //     server_id,
-        //     user_id
-        // });
-
-        // if (!member) {
-        //     throw new Error("You are not a member of this server");
-        // }
-
-        // 3. Get channels
         const channels = await db.orm.public.Channel
             .where({
                 server_id
@@ -108,18 +90,17 @@ export class ChannelService {
         }
 
         // 2. Check whether user belongs to channel's server
-        // const member = await servermemberService.isMember({
-        //     server_id: channel.server_id,
-        //     user_id
-        // });
+        const member = await servermemberService.isMember({
+            server_id: channel.server_id,
+            user_id
+        });
 
-        // if (!member) {
-        //     throw new Error("You are not a member of this server");
-        // }
+        if (!member) {
+            throw new Error("You are not a member of this server");
+        }
 
         return channel;
     }
-
 
     // Update channel
     async updateChannel(
@@ -128,6 +109,7 @@ export class ChannelService {
         data: {
             name?: string;
             type?: "text" | "voice";
+            position?: number;
         }
     ) {
 
@@ -141,6 +123,8 @@ export class ChannelService {
         // if (!channel) {
         //     throw new Error("CHANNEL_NOT_FOUND");
         // }
+
+        const channel = await this.getChannel(channel_id, user_id);
 
         // 2. Check whether user has permission
         // Usually this should be owner/admin/permission based,
@@ -174,6 +158,8 @@ export class ChannelService {
         // if (!channel) {
         //     throw new Error("CHANNEL_NOT_FOUND");
         // }
+
+        const channel = await this.getChannel(channel_id, user_id);
 
         // 2. Check whether user has permission
         // Usually ADMIN / MANAGE_CHANNEL permission.
