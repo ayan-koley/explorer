@@ -34,10 +34,15 @@ export class ServerService {
         return server;
     }
     async getUserServers(user_id: number) {
-        return await db.orm.public.Server_member.where({
-            user_id
-        }).include("server")
-        .all()
+
+        return await db.orm.public.Server
+        .include("server_member", 
+            (member) => 
+                member.where({user_id}
+
+            )
+        )
+        .all();
     }
     async getServer(
         {
