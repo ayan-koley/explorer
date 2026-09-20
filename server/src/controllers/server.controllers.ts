@@ -24,7 +24,7 @@ const createServer = asyncHandler(async(req: Request, res: Response) => {
 
     const serverMember = await servermemberService.addMember({server_id: server.id, user_id: req.user.id});
 
-    const channel = await channelService.createChannel({server_id: server.id, name: "general", type: "text"})
+    const channel = await channelService.createChannel({server_id: server.id, name: "general", type: "text", user_id: req.user.id})
 
     return res.status(201).json(
         ApiResponse.success({
@@ -41,7 +41,9 @@ const getMyServers = asyncHandler(async(req: Request, res: Response) => {
 
     const servers = await serverService.getUserServers(req.user.id);
 
-    return servers;
+    return res.status(200).json(
+        ApiResponse.success(servers, "Fetch user servers")
+    );
 })
 const getServerById = asyncHandler(async(req: Request, res: Response) => {
     if(!req.user) {
@@ -58,7 +60,9 @@ const getServerById = asyncHandler(async(req: Request, res: Response) => {
 
     const server = await serverService.getServer({ server_id: Number(server_id), user_id: req.user.id});
 
-    return server;
+    return res.status(200).json(
+        ApiResponse.success(server, "Fetch user servers")
+    );
 })
 const updateServer = asyncHandler(async(req: Request, res: Response) => {
     const {server_id} = req.params;
@@ -72,7 +76,9 @@ const updateServer = asyncHandler(async(req: Request, res: Response) => {
 
     const server = await serverService.updateServer({server_id: Number(server_id), user_id: req.user?.id!, data: response.data});
 
-    return server;
+    return res.status(200).json(
+        ApiResponse.success(server, "Fetch user servers")
+    );
 })
 
 const deleteServer = asyncHandler(async(req: Request, res: Response) => {
