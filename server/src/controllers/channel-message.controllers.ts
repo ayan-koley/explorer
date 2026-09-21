@@ -12,7 +12,7 @@ const getParamId = (value: string | undefined, name: string) => {
         throw new Error(`${name} must be a positive integer`)
     }
 
-    return id
+    return id;
 }
 
 
@@ -38,7 +38,7 @@ const sendMessage = asyncHandler(async(req: Request, res: Response) => {
 
     const message = await messageService.sendMessage(channelId, user.id, response.data.content)
 
-    return res.status(201).json(ApiResponse.success(message, "Message sent successfully"))
+    return res.status(201).json(ApiResponse.success(message, "Message sent successfully"));
 })
 
 const getMessages = asyncHandler(async(req: Request, res: Response) => {
