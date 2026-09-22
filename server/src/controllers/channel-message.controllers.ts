@@ -60,14 +60,14 @@ const getMessages = asyncHandler(async(req: Request, res: Response) => {
 })
 
 const getMessage = asyncHandler(async(req: Request, res: Response) => {
-    const user = requireUser(req, res)
-    if (!user) return
+    const user = requireUser(req, res);
+    if (!user) return;
 
-    const messageId = getParamId(req.params.channel_id as string, "message_id")
-    const message = await messageService.getMessage(messageId)
-    await channelService.getChannel(message.channel_id, user.id)
+    const messageId = getParamId(req.params.channel_id as string, "message_id");
+    const message = await messageService.getMessage(messageId);
+    await channelService.getChannel(message.channel_id, user.id);
 
-    return res.status(200).json(ApiResponse.success(message))
+    return res.status(200).json(ApiResponse.success(message));
 })
 
 const editMessage = asyncHandler(async(req: Request, res: Response) => {
