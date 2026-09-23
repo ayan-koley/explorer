@@ -93,7 +93,9 @@ const deleteMessage = asyncHandler(async(req: Request, res: Response) => {
     const messageId = getParamId(req.params.channel_id as string, "message_id")
     await messageService.deleteMessage(messageId, user.id)
 
-    return res.status(204).send()
+    return res.status(204).json(
+        ApiResponse.success(null, "message delete")
+    )
 })
 
 export {
