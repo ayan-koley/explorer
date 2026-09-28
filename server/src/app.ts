@@ -27,7 +27,7 @@ import channelMessageRoutes from './routes/channel-message.routes.js';
 import serverMemberRoutes from './routes/server-member.routes.js';
 
 app.use("/api/v1/healthcheck", (req: Request, res: Response) => {
-    return res.status(200).json({message: "The server is work properly 😀🔥"})
+    return res.status(200).json({message: "Healthy Server 😀🔥"})
 })
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/conversations", conversationsRoutes);
