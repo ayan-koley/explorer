@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres
-    container_name: explorer_postgres
+    container_name: chaitalk-container
     
     env_file:
       - .env
