@@ -36,204 +36,222 @@ model User {
   email String?  @unique
   password_hash String?
   avatar_url String?
+  email_verified Boolean @default(false)
   createdAt TimestamptzString @default(now())
   updatedAt temporal.updatedAtString()
 
+  // authentication and authorization related relations
   user_auth_provider User_Auth_Provider[]
-  Direct_message Direct_message[]
-  message_receipt Message_receipt[]
-  Direct_conversation_member Direct_conversation_member[]
   refreshToken RefreshToken[]
-  server Server[]
-  channel_message Channel_message[]
-  server_member Server_member[]
-  voice_session Voice_session[]
-  channel_mesasge Channel_message[]
-
+  email_verification_otps EmailVerificationOTP[]
+  
+  // Direct_message Direct_message[]
+  // message_receipt Message_receipt[]
+  // Direct_conversation_member Direct_conversation_member[]
+  // server Server[]
+  // channel_message Channel_message[]
+  // server_member Server_member[]
+  // voice_session Voice_session[]
 }
-
 
 model User_Auth_Provider {
   id  Int @id @default(autoincrement())
   userId Int
-  user User @relation(fields: [userId], references: [id])
   provider Provider
   provider_user_id String?
   createdAt TimestamptzString @default(now())
   updatedAt temporal.updatedAtString()
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, provider_user_id])
 }
 
-model Direct_conversation {
+model EmailVerificationOTP {
   id Int @id @default(autoincrement())
-  createdAt TimestamptzString @default(now())
-  last_message_at TimestamptzString?
-
-  direct_message Direct_message[]
-  direct_conversation_member Direct_conversation_member[]
-}
-
-model Direct_message {
-  id Int @id @default(autoincrement())
-  conversationId Int
-  senderId Int
-  content String
-  message_type MessageType @default(Text)
-  reply_to_message_id Int?
-  createdAt TimestamptzString @default(now())
-  edited_at TimestamptzString?
-  deleted_at TimestamptzString?
-
-  conversation Direct_conversation @relation(fields: [conversationId], references: [id])
-  sender User @relation(fields: [senderId], references: [id])
-  reply_to_message Direct_message? @relation("MessageReplies", fields: [reply_to_message_id], references: [id])
-
-  replies Direct_message[] @relation("MessageReplies")
-  message_receipt Message_receipt[]
-}
-
-model Message_receipt {
-  @@id([message_id, user_id])
-
-  message_id Int
   user_id Int
-  deliverd_at TimestamptzString?
-  seen_at TimestamptzString?
-
+  otp_hash String
+  expires_at TimestamptzString
+  attempt_count Int @default(0)
+  consumed_at TimestamptzString?
   createdAt TimestamptzString @default(now())
 
-  message Direct_message @relation(fields: [message_id], references: [id])
-  user User @relation(fields: [user_id], references: [id])
-}
-
-model Direct_conversation_member {
-  conversation_id Int
-  user_id Int
-  joined_at TimestamptzString @default(now())
-  last_read_message_id Int?
-
-  conversation Direct_conversation @relation(fields: [conversation_id], references: [id])
-  last_read_message Direct_message @relation(fields: [last_read_message_id], references: [id])
-  user User @relation(fields: [user_id], references: [id])
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model RefreshToken {
   id Int @id @default(autoincrement())
   token_id String @unique
   user_id Int
+  hash_refresh_token String
   expires_at TimestamptzString
   revoked_at TimestamptzString?
 
   user User @relation(fields: [user_id], references: [id])
 }
 
-model Server {
-  id Int @id @default(autoincrement())
-  name String @unique
-  icon_url String?
-  owner_id Int
-  visibility VisibilityType @default(PUBLIC)
-  created_at TimestamptzString @default(now())
+// model Direct_conversation {
+//   id Int @id @default(autoincrement())
+//   createdAt TimestamptzString @default(now())
+//   last_message_at TimestamptzString?
 
-  user User @relation(fields: [owner_id], references: [id])
-  channel Channel[]
-  role Role[]
-  server_member Server_member[]
+//   direct_message Direct_message[]
+//   direct_conversation_member Direct_conversation_member[]
+// }
 
-}
+// model Direct_message {
+//   id Int @id @default(autoincrement())
+//   conversationId Int
+//   senderId Int
+//   content String
+//   message_type MessageType @default(Text)
+//   reply_to_message_id Int?
+//   createdAt TimestamptzString @default(now())
+//   edited_at TimestamptzString?
+//   deleted_at TimestamptzString?
 
-model Channel {
-  id Int @id @default(autoincrement())
-  server_id Int
-  name String
-  type ChannelType @default(TEXT)
-  position Int?
-  created_at TimestamptzString @default(now())
+//   conversation Direct_conversation @relation(fields: [conversationId], references: [id])
+//   sender User @relation(fields: [senderId], references: [id])
+//   reply_to_message Direct_message? @relation("MessageReplies", fields: [reply_to_message_id], references: [id])
 
-  server Server @relation(fields: [server_id], references: [id])
-  channel_mesasge Channel_message[]
-  voice_session Voice_session[]
+//   replies Direct_message[] @relation("MessageReplies")
+//   message_receipt Message_receipt[]
+// }
 
-}
+// model Message_receipt {
+//   @@id([message_id, user_id])
 
-model Channel_message {
-  id Int @id @default(autoincrement())
-  channel_id Int
-  sender_id Int
-  content String
-  reply_to_message_id Int?
-  created_at TimestamptzString @default(now())
-  edited_at TimestamptzString?
-  deleted_at TimestamptzString?
+//   message_id Int
+//   user_id Int
+//   deliverd_at TimestamptzString?
+//   seen_at TimestamptzString?
 
-  channel Channel @relation(fields: [channel_id], references: [id])
-  user User @relation(fields: [sender_id], references: [id])
-  reply_message Channel_message @relation(fields: [reply_to_message_id], references: [id])
-}
+//   createdAt TimestamptzString @default(now())
 
-model Server_member {
-  server_id Int
-  user_id Int
-  nickname String?
-  joined_at TimestamptzString @default(now())
+//   message Direct_message @relation(fields: [message_id], references: [id])
+//   user User @relation(fields: [user_id], references: [id])
+// }
 
-  server Server @relation(fields: [server_id], references: [id])
-  user User @relation(fields: [user_id], references: [id])
-  server_member_role Server_member_role?
+// model Direct_conversation_member {
+//   conversation_id Int
+//   user_id Int
+//   joined_at TimestamptzString @default(now())
+//   last_read_message_id Int?
 
-  @@id([server_id, user_id])
-}
-
-model Role {
-  id Int @id @default(autoincrement())
-  server_id Int
-  name String
-  color String
-  position Int
-
-  server Server @relation(fields: [server_id], references: [id])
-  role_permission Role_permision[]
-  server_member_role Server_member_role[]
-
-}
-
-model Server_member_role {
-  id Int @id @default(autoincrement())
-  server_id Int
-  user_id Int
-  role_id Int
-
-  @@unique([server_id, user_id])
-
-  server_member Server_member @relation(fields: [server_id, user_id], references: [server_id, user_id])
-  role Role @relation(fields: [role_id], references: [id])
-}
+//   conversation Direct_conversation @relation(fields: [conversation_id], references: [id])
+//   last_read_message Direct_message? @relation(fields: [last_read_message_id], references: [id])
+//   user User @relation(fields: [user_id], references: [id])
+// }
 
 
-model Permission {
-  id Int @id @default(autoincrement())
-  name String?
-  Role_permision Role_permision[]
-}
+// model Server {
+//   id Int @id @default(autoincrement())
+//   name String @unique
+//   icon_url String?
+//   owner_id Int
+//   visibility VisibilityType @default(PUBLIC)
+//   created_at TimestamptzString @default(now())
 
-model Role_permision {
-  @@id([role_id, permission_id])
-  role_id Int
-  permission_id Int
+//   user User @relation(fields: [owner_id], references: [id])
+//   channel Channel[]
+//   role Role[]
+//   server_member Server_member[]
 
-  role Role @relation(fields: [role_id], references: [id])
-  permission Permission @relation(fields: [permission_id], references: [id])
-}
+// }
 
-model Voice_session {
-  id Int @id @default(autoincrement())
-  channel_id Int
-  user_id Int
-  microphone_enabled Boolean @default(true)
-  camera_enabled Boolean @default(false)
-  screen_sharing Boolean @default(false)
-  joined_at TimestamptzString
-  left_at TimestamptzString?
+// model Channel {
+//   id Int @id @default(autoincrement())
+//   server_id Int
+//   name String
+//   type ChannelType @default(TEXT)
+//   position Int?
+//   created_at TimestamptzString @default(now())
 
-  channel Channel @relation(fields: [channel_id], references: [id])
-  user User @relation(fields: [user_id], references: [id])
-}
+//   server Server @relation(fields: [server_id], references: [id])
+//   channel_mesasge Channel_message[]
+//   voice_session Voice_session[]
+
+// }
+
+// model Channel_message {
+//   id Int @id @default(autoincrement())
+//   channel_id Int
+//   sender_id Int
+//   content String
+//   reply_to_message_id Int?
+//   created_at TimestamptzString @default(now())
+//   edited_at TimestamptzString?
+//   deleted_at TimestamptzString?
+
+//   channel Channel @relation(fields: [channel_id], references: [id])
+//   user User @relation(fields: [sender_id], references: [id])
+//   reply_message Channel_message @relation(fields: [reply_to_message_id], references: [id])
+// }
+
+// model Server_member {
+//   server_id Int
+//   user_id Int
+//   nickname String?
+//   joined_at TimestamptzString @default(now())
+
+//   server Server @relation(fields: [server_id], references: [id])
+//   user User @relation(fields: [user_id], references: [id])
+//   server_member_role Server_member_role?
+
+//   @@id([server_id, user_id])
+// }
+
+// model Role {
+//   id Int @id @default(autoincrement())
+//   server_id Int
+//   name String
+//   color String
+//   position Int
+
+//   server Server @relation(fields: [server_id], references: [id])
+//   role_permission Role_permision[]
+//   server_member_role Server_member_role[]
+
+// }
+
+// model Server_member_role {
+//   id Int @id @default(autoincrement())
+//   server_id Int
+//   user_id Int
+//   role_id Int
+
+//   @@unique([server_id, user_id])
+
+//   server_member Server_member @relation(fields: [server_id, user_id], references: [server_id, user_id])
+//   role Role @relation(fields: [role_id], references: [id])
+// }
+
+
+// model Permission {
+//   id Int @id @default(autoincrement())
+//   name String?
+//   Role_permision Role_permision[]
+// }
+
+// model Role_permision {
+//   @@id([role_id, permission_id])
+//   role_id Int
+//   permission_id Int
+
+//   role Role @relation(fields: [role_id], references: [id])
+//   permission Permission @relation(fields: [permission_id], references: [id])
+// }
+
+// model Voice_session {
+//   id Int @id @default(autoincrement())
+//   channel_id Int
+//   user_id Int
+//   microphone_enabled Boolean @default(true)
+//   camera_enabled Boolean @default(false)
+//   screen_sharing Boolean @default(false)
+//   joined_at TimestamptzString
+//   left_at TimestamptzString?
+
+//   channel Channel @relation(fields: [channel_id], references: [id])
+//   user User @relation(fields: [user_id], references: [id])
+// }
