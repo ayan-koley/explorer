@@ -16,7 +16,7 @@ const hashOTP = (otp: string): string => {
 const verifyOTP = (otp: string, hash: string): boolean => {
   return bcrypt.compareSync(otp, hash);
 }
-
+  
 export {
   generateOTP,
   hashOTP,
