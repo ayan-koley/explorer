@@ -5,7 +5,9 @@ import { Request, Response } from "express";
 import {db} from '../prisma/db.js'
 import { or } from "@prisma/orm-postgres/orm-client";
 import { generateAccessToken, generateRefreshToken } from "../utils/token.js";
+import { generateOTP } from "../utils/otp.js";
 
+// Create a pending account and send OTP
 const signUpUser = asyncHandler(async(req: Request, res: Response) => {
     const response = signUp.safeParse(req.body);
 
@@ -24,10 +26,15 @@ const signUpUser = asyncHandler(async(req: Request, res: Response) => {
         email,
         full_name,
         username,
-        password_hash: hashPassword
+        password_hash: hashPassword,
+        email_verified: false,
     })
 
-    console.log(`new user is created ${newUser}`);
+    // const otp = generateOTP();
+    // const otpHash = await generateHash(otp);
+    // await db.orm.public.
+
+    // console.log(`new user is created ${newUser}`);
     // return response
     return res.status(201).json(
         ApiResponse.success(null, 'User created Successfully')
@@ -65,11 +72,11 @@ const signInUser = asyncHandler(async(req: Request, res: Response) => {
 
     const expirationDate = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
 
-    await db.orm.public.RefreshToken.create({
-        user_id: user.id,
-        token_id: jti,  
-        expires_at: expirationDate.toISOString()
-    })
+    // await db.orm.public.RefreshToken.create({
+    //     user_id: user.id,
+    //     token_id: jti,  
+    //     expires_at: expirationDate.toISOString()
+    // })
     // store refreshToken
     // return access and refreshToken in cookies and user details
     return res.status(200)
