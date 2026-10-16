@@ -6,6 +6,7 @@ import {db} from '../prisma/db.js'
 import { or } from "@prisma/orm-postgres/orm-client";
 import { generateAccessToken, generateRefreshToken } from "../utils/token.js";
 import { generateOTP } from "../utils/otp.js";
+import { sendOtpEmail } from "../services/Email.service.js";
 
 // Create a pending account and send OTP
 const signUpUser = asyncHandler(async(req: Request, res: Response) => {
@@ -30,16 +31,31 @@ const signUpUser = asyncHandler(async(req: Request, res: Response) => {
         email_verified: false,
     })
 
-    // const otp = generateOTP();
-    // const otpHash = await generateHash(otp);
-    // await db.orm.public.
+    const otp = generateOTP();
+    const otpHash = await generateHash(otp);
+    await db.orm.public.EmailVerificationOTP.create({
+        user_id: newUser.id,
+        otp_hash: otpHash,
+        expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+        createdAt: new Date(Date.now()).toISOString(),
+    })
+    const emailOtp = await sendOtpEmail(email, {username, otp});
 
-    // console.log(`new user is created ${newUser}`);
-    // return response
+    if(emailOtp.error) {
+        ApiResponse.error(`Error sending email ${emailOtp.error.message}`);
+    }
+
     return res.status(201).json(
-        ApiResponse.success(null, 'User created Successfully')
+        ApiResponse.success({success: true}, 'Verification code sent to your email')
     )
 })
+
+// const verifyEmailOtpController = asyncHandler(async(req: Request, res: Response) => {
+
+//     const 
+// })
+
+
 const signInUser = asyncHandler(async(req: Request, res: Response) => {
     // validate user using zod
     const response = signIn.safeParse(req.body);
