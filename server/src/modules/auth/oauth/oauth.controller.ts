@@ -36,8 +36,8 @@ async function finishOAuth(provider: 'google' | 'github', req: Request, res: Res
 
       // Match the cookie contract used by password sign-in.
       return res
-        .cookie('accessToken', accessToken, { maxAge: 7 * 60 * 60 * 1000, httpOnly: true, secure: true })
-        .cookie('refreshToken', refreshToken, { maxAge: 15 * 24 * 60 * 60 * 1000, httpOnly: true, secure: true })
+        .cookie('accessToken', accessToken, { maxAge: 7 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax' })
+        .cookie('refreshToken', refreshToken, { maxAge: 15 * 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax' })
         .status(200)
         .json(ApiResponse.success({ id: user.id, full_name: user.full_name, username: user.username, email: user.email }, `${provider} sign-in successful`));
     } catch (callbackError) {
