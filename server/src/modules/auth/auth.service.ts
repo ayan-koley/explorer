@@ -1,14 +1,10 @@
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-if(!resend) {
-  throw new Error('Resend API key is not defined in the environment variables.');
-}
 
 
 
 export const sendOtpEmail = async (to: string, {username, otp}: {username: string, otp: string}) => {
-    console.log(`username: ${username}, otp: ${otp}`);
     try {
         const subject = "Verify your email for ChaiTalk";
         const html = `
@@ -111,12 +107,17 @@ export const sendOtpEmail = async (to: string, {username, otp}: {username: strin
         if(!from) {
             throw new Error('Email from address is not defined in the environment variables.');
         }
+        if(!process.env.RESEND_API_KEY) {
+            throw new Error('Resend API key is not defined in the environment variables.');
+        }
         const data = await resend.emails.send({
             from: from,
             to: to,
             subject: subject,
             html: html,
         });
+
+        if (data.error) throw new Error(data.error.message);
 
         return data;
 
