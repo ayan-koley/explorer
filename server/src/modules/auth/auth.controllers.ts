@@ -22,9 +22,24 @@ const signUpUser = asyncHandler(async(req: Request, res: Response) => {
 
     const existingUser = await db.orm.public.User.first((u) => or(u.email.eq(email), u.username.eq(username)));
 
-    console.log(`Existing user: ${existingUser}`);
-
     if(existingUser && !existingUser.email_verified) {
+        const otpRecord = await db.orm.public.EmailVerificationOTP.first((o) => o.user_id.eq(existingUser.id));
+        if (!otpRecord) {
+            return res.status(409).json(ApiResponse.error('Verification record is missing. Please contact support.'));
+        }
+        const otp = generateOTP();
+        const otpHash = await generateHash(otp);
+        await db.orm.public.EmailVerificationOTP.where({id: otpRecord.id}).update({
+            otp_hash: otpHash,
+            expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+            attempt_count: 0,
+            createdAt: new Date().toISOString(),
+        });
+        try {
+            await sendOtpEmail(email, {username: existingUser.username, otp});
+        } catch {
+            return res.status(502).json(ApiResponse.error('Unable to send verification email. Please try again.'));
+        }
         return res.status(400).json(
             ApiResponse.success(
                 {
@@ -61,10 +76,10 @@ const signUpUser = asyncHandler(async(req: Request, res: Response) => {
         expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
         createdAt: new Date(Date.now()).toISOString(),
     })
-    const emailOtp = await sendOtpEmail(email, {username, otp});
-
-    if(emailOtp.error) {
-        ApiResponse.error(`Error sending email ${emailOtp.error.message}`);
+    try {
+        await sendOtpEmail(email, {username, otp});
+    } catch {
+        return res.status(502).json(ApiResponse.error('Unable to send verification email. Please try again.'));
     }
 
     return res.status(201).json(
@@ -103,7 +118,7 @@ const verifyEmailOtpController = asyncHandler(async(req: Request, res: Response)
         )   
     }
 
-    if(new Date(otpRecord.expires_at).toISOString() < new Date(Date.now()).toISOString()) {
+    if(new Date(otpRecord.expires_at).getTime() <= Date.now()) {
         return res.status(400).json(
             ApiResponse.error('OTP expired')
         )
@@ -112,6 +127,9 @@ const verifyEmailOtpController = asyncHandler(async(req: Request, res: Response)
     const isValidOtp = verifyOTP(otp, otpRecord.otp_hash);
 
     if(!isValidOtp) {
+        await db.orm.public.EmailVerificationOTP.where({id: otpRecord.id}).update({
+            attempt_count: otpRecord.attempt_count + 1,
+        });
         return res.status(400).json(
             ApiResponse.error('Invalid OTP')
         )
@@ -166,16 +184,14 @@ const resendOTP = asyncHandler(async(req: Request, res: Response) => {
     await db.orm.public.EmailVerificationOTP.where({id: otpRecord.id}).update({
         otp_hash: otpHash,
         expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
-        attempt_count: otpRecord.attempt_count + 1,
+        attempt_count: 0,
         createdAt: new Date(Date.now()).toISOString(),
     });
 
-    const emailOtp = await sendOtpEmail(email, {username: user.username, otp});
-
-    if(emailOtp.error) {
-        return res.status(500).json(
-            ApiResponse.error(`Error sending email ${emailOtp.error.message}`)
-        )
+    try {
+        await sendOtpEmail(email, {username: user.username, otp});
+    } catch {
+        return res.status(502).json(ApiResponse.error('Unable to send verification email. Please try again.'));
     }
 
     return res.status(200).json(
@@ -233,8 +249,8 @@ const signInUser = asyncHandler(async(req: Request, res: Response) => {
 
     const userDetails = await db.orm.public.User.select("id", "full_name", "username", "email").where((u) => u.id.eq(user.id)).first();
     return res.status(200)
-    .cookie('accessToken', accessToken, {maxAge: 7 * 60 * 60 * 1000, httpOnly: true, secure: true})
-    .cookie('refreshToken', refreshToken, {maxAge: 15 * 24 * 60 * 60 * 1000, httpOnly: true, secure: true})
+    .cookie('accessToken', accessToken, {maxAge: 7 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax'})
+    .cookie('refreshToken', refreshToken, {maxAge: 15 * 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax'})
     .json(
         ApiResponse.success(userDetails, "User logged in Successfully ")
     )
@@ -247,7 +263,8 @@ const signOutUser = asyncHandler(async(req: Request, res: Response) => {
         revoked_at: new Date(Date.now()).toISOString()
     })
 
-    return res.status(200).clearCookie('accessToken').clearCookie('refreshToken').json(
+    const cookieOptions = {httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax' as const};
+    return res.status(200).clearCookie('accessToken', cookieOptions).clearCookie('refreshToken', cookieOptions).json(
         ApiResponse.success(null, 'Logout successfully')
     )
 })
