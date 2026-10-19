@@ -32,3 +32,14 @@ export const updateServerSchema = z.object({
 
   visibility: z.enum(["public", "private"]).optional(),
 });
+
+export const serverIdParamsSchema = z.object({ serverId: z.coerce.number().int().positive() });
+
+export const roleSchema = z.object({
+  name: z.string().trim().min(1).max(50),
+  color: z.string().trim().regex(/^#[0-9a-fA-F]{6}$/).default('#99AAB5'),
+  permissions: z.number().int().min(0).max(511),
+  position: z.number().int().min(0).max(1000).optional(),
+});
+
+export const updateRoleSchema = roleSchema.partial();
