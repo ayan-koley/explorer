@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 export const memberParamsSchema = z.object({
-    serverId: z.coerce.number().int().positive(),
+    serverId: z.string().uuid(),
 })
 
 export const targetMemberParamsSchema = memberParamsSchema.extend({
@@ -17,6 +17,8 @@ export const nicknameBodySchema = z.object({
     nickname: z.string().trim().max(100).nullable().optional(),
 })
 
+export const assignRoleBodySchema = z.object({ roleId: z.coerce.number().int().positive() })
+
 export const getMemberParams = (params: unknown, schema: z.ZodTypeAny) => {
     const result = schema.safeParse(params)
 
@@ -24,5 +26,5 @@ export const getMemberParams = (params: unknown, schema: z.ZodTypeAny) => {
         throw new Error("Invalid member parameters")
     }
 
-    return result.data as { serverId: number, userId?: number }
+    return result.data as { serverId: string, userId?: number }
 }
