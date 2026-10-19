@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'d0c27d741308c17fd2e5dc7b4a278aba71c2c09948dbc56ccdbe63377011ffc3'>;
+  StorageHashBase<'a2f7cb760fd33af8d0a463563d7f4c9d99e1a9de321aff9a84d5ddb6e33fdc97'>;
 export type ExecutionHash =
   ExecutionHashBase<'a0b81cda3ae48e8fd834afe799bc38a3c76f05cd953796b3e67b6183a902e79d'>;
 export type ProfileHash =
@@ -241,6 +241,37 @@ type DefaultLiteralValue<CodecId extends string, Encoded> = CodecId extends keyo
 
 export type FieldOutputTypes = {
   readonly public: {
+    readonly Channel: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly serverId: CodecTypes['pg/int4@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly type: 'text' | 'voice';
+      readonly isPrivate: CodecTypes['pg/bool@1']['output'];
+      readonly position: CodecTypes['pg/int4@1']['output'] | null;
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
+    readonly Conversation: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly lastMessageAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+    };
+    readonly ConversationMember: {
+      readonly conversationId: CodecTypes['pg/int4@1']['output'];
+      readonly userId: CodecTypes['pg/int4@1']['output'];
+      readonly joinedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly lastReadMessageId: CodecTypes['pg/int4@1']['output'] | null;
+    };
+    readonly DirectMessage: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly conversationId: CodecTypes['pg/int4@1']['output'];
+      readonly senderId: CodecTypes['pg/int4@1']['output'];
+      readonly content: CodecTypes['pg/text@1']['output'];
+      readonly messageType: 'text' | 'image' | 'video' | 'voice' | 'file';
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly editedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly deletedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly replyToMessageId: CodecTypes['pg/int4@1']['output'] | null;
+    };
     readonly EmailVerificationOTP: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly user_id: CodecTypes['pg/int4@1']['output'];
@@ -250,6 +281,33 @@ export type FieldOutputTypes = {
       readonly consumed_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
+    readonly LegacyVoiceSession: {
+      readonly camera_enabled: CodecTypes['pg/bool@1']['output'];
+      readonly channel_id: CodecTypes['pg/int4@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly joined_at: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly left_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly microphone_enabled: CodecTypes['pg/bool@1']['output'];
+      readonly screen_sharing: CodecTypes['pg/bool@1']['output'];
+      readonly user_id: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly Message: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly channelId: CodecTypes['pg/int4@1']['output'];
+      readonly authorId: CodecTypes['pg/int4@1']['output'];
+      readonly replyToMessageId: CodecTypes['pg/int4@1']['output'] | null;
+      readonly content: CodecTypes['pg/text@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly editedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly deletedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+    };
+    readonly MessageReceipt: {
+      readonly messageId: CodecTypes['pg/int4@1']['output'];
+      readonly userId: CodecTypes['pg/int4@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly deliveredAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly seenAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+    };
     readonly RefreshToken: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly token_id: CodecTypes['pg/text@1']['output'];
@@ -257,6 +315,36 @@ export type FieldOutputTypes = {
       readonly hash_refresh_token: CodecTypes['pg/text@1']['output'];
       readonly expires_at: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly revoked_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+    };
+    readonly Role: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly serverId: CodecTypes['pg/int4@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly color: CodecTypes['pg/text@1']['output'];
+      readonly permissions: CodecTypes['pg/int4@1']['output'];
+      readonly position: CodecTypes['pg/int4@1']['output'];
+      readonly isDefault: CodecTypes['pg/bool@1']['output'];
+    };
+    readonly Server: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly description: CodecTypes['pg/text@1']['output'] | null;
+      readonly iconUrl: CodecTypes['pg/text@1']['output'] | null;
+      readonly visibility: 'public' | 'private';
+      readonly ownerId: CodecTypes['pg/int4@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
+    readonly ServerMember: {
+      readonly serverId: CodecTypes['pg/int4@1']['output'];
+      readonly userId: CodecTypes['pg/int4@1']['output'];
+      readonly nickname: CodecTypes['pg/text@1']['output'] | null;
+      readonly joinedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
+    readonly ServerMemberRole: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly serverId: CodecTypes['pg/int4@1']['output'];
+      readonly userId: CodecTypes['pg/int4@1']['output'];
+      readonly roleId: CodecTypes['pg/int4@1']['output'];
     };
     readonly User: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -281,6 +369,37 @@ export type FieldOutputTypes = {
 };
 export type FieldInputTypes = {
   readonly public: {
+    readonly Channel: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly serverId: CodecTypes['pg/int4@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly type: 'text' | 'voice';
+      readonly isPrivate: CodecTypes['pg/bool@1']['input'];
+      readonly position: CodecTypes['pg/int4@1']['input'] | null;
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
+    readonly Conversation: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly lastMessageAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+    };
+    readonly ConversationMember: {
+      readonly conversationId: CodecTypes['pg/int4@1']['input'];
+      readonly userId: CodecTypes['pg/int4@1']['input'];
+      readonly joinedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly lastReadMessageId: CodecTypes['pg/int4@1']['input'] | null;
+    };
+    readonly DirectMessage: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly conversationId: CodecTypes['pg/int4@1']['input'];
+      readonly senderId: CodecTypes['pg/int4@1']['input'];
+      readonly content: CodecTypes['pg/text@1']['input'];
+      readonly messageType: 'text' | 'image' | 'video' | 'voice' | 'file';
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly editedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly deletedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly replyToMessageId: CodecTypes['pg/int4@1']['input'] | null;
+    };
     readonly EmailVerificationOTP: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly user_id: CodecTypes['pg/int4@1']['input'];
@@ -290,6 +409,33 @@ export type FieldInputTypes = {
       readonly consumed_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
+    readonly LegacyVoiceSession: {
+      readonly camera_enabled: CodecTypes['pg/bool@1']['input'];
+      readonly channel_id: CodecTypes['pg/int4@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly joined_at: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly left_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly microphone_enabled: CodecTypes['pg/bool@1']['input'];
+      readonly screen_sharing: CodecTypes['pg/bool@1']['input'];
+      readonly user_id: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly Message: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly channelId: CodecTypes['pg/int4@1']['input'];
+      readonly authorId: CodecTypes['pg/int4@1']['input'];
+      readonly replyToMessageId: CodecTypes['pg/int4@1']['input'] | null;
+      readonly content: CodecTypes['pg/text@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly editedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly deletedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+    };
+    readonly MessageReceipt: {
+      readonly messageId: CodecTypes['pg/int4@1']['input'];
+      readonly userId: CodecTypes['pg/int4@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly deliveredAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly seenAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+    };
     readonly RefreshToken: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly token_id: CodecTypes['pg/text@1']['input'];
@@ -297,6 +443,36 @@ export type FieldInputTypes = {
       readonly hash_refresh_token: CodecTypes['pg/text@1']['input'];
       readonly expires_at: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly revoked_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+    };
+    readonly Role: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly serverId: CodecTypes['pg/int4@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly color: CodecTypes['pg/text@1']['input'];
+      readonly permissions: CodecTypes['pg/int4@1']['input'];
+      readonly position: CodecTypes['pg/int4@1']['input'];
+      readonly isDefault: CodecTypes['pg/bool@1']['input'];
+    };
+    readonly Server: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly description: CodecTypes['pg/text@1']['input'] | null;
+      readonly iconUrl: CodecTypes['pg/text@1']['input'] | null;
+      readonly visibility: 'public' | 'private';
+      readonly ownerId: CodecTypes['pg/int4@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
+    readonly ServerMember: {
+      readonly serverId: CodecTypes['pg/int4@1']['input'];
+      readonly userId: CodecTypes['pg/int4@1']['input'];
+      readonly nickname: CodecTypes['pg/text@1']['input'] | null;
+      readonly joinedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
+    readonly ServerMemberRole: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly serverId: CodecTypes['pg/int4@1']['input'];
+      readonly userId: CodecTypes['pg/int4@1']['input'];
+      readonly roleId: CodecTypes['pg/int4@1']['input'];
     };
     readonly User: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -321,6 +497,47 @@ export type FieldInputTypes = {
 };
 export type StorageColumnTypes = {
   readonly public: {
+    readonly channel: {
+      readonly created_at: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly isPrivate: CodecTypes['pg/bool@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly position: CodecTypes['pg/int4@1']['output'] | null;
+      readonly server_id: CodecTypes['pg/int4@1']['output'];
+      readonly type: 'text' | 'voice';
+    };
+    readonly channel_message: {
+      readonly channel_id: CodecTypes['pg/int4@1']['output'];
+      readonly content: CodecTypes['pg/text@1']['output'];
+      readonly created_at: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly deleted_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly edited_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly reply_to_message_id: CodecTypes['pg/int4@1']['output'] | null;
+      readonly sender_id: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly conversation: {
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly lastMessageAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+    };
+    readonly conversationMember: {
+      readonly conversationId: CodecTypes['pg/int4@1']['output'];
+      readonly joinedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly lastReadMessageId: CodecTypes['pg/int4@1']['output'] | null;
+      readonly userId: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly directMessage: {
+      readonly content: CodecTypes['pg/text@1']['output'];
+      readonly conversationId: CodecTypes['pg/int4@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly deletedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly editedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly messageType: 'text' | 'image' | 'video' | 'voice' | 'file';
+      readonly replyToMessageId: CodecTypes['pg/int4@1']['output'] | null;
+      readonly senderId: CodecTypes['pg/int4@1']['output'];
+    };
     readonly emailVerificationOTP: {
       readonly attempt_count: CodecTypes['pg/int4@1']['output'];
       readonly consumed_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
@@ -330,12 +547,49 @@ export type StorageColumnTypes = {
       readonly otp_hash: CodecTypes['pg/text@1']['output'];
       readonly user_id: CodecTypes['pg/int4@1']['output'];
     };
+    readonly messageReceipt: {
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly deliveredAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly messageId: CodecTypes['pg/int4@1']['output'];
+      readonly seenAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly userId: CodecTypes['pg/int4@1']['output'];
+    };
     readonly refreshToken: {
       readonly expires_at: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly hash_refresh_token: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly revoked_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
       readonly token_id: CodecTypes['pg/text@1']['output'];
+      readonly user_id: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly role: {
+      readonly color: CodecTypes['pg/text@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly isDefault: CodecTypes['pg/bool@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly permissions: CodecTypes['pg/int4@1']['output'];
+      readonly position: CodecTypes['pg/int4@1']['output'];
+      readonly server_id: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly server: {
+      readonly created_at: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly description: CodecTypes['pg/text@1']['output'] | null;
+      readonly icon_url: CodecTypes['pg/text@1']['output'] | null;
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly owner_id: CodecTypes['pg/int4@1']['output'];
+      readonly visibility: 'public' | 'private';
+    };
+    readonly server_member: {
+      readonly joined_at: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly nickname: CodecTypes['pg/text@1']['output'] | null;
+      readonly server_id: CodecTypes['pg/int4@1']['output'];
+      readonly user_id: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly server_member_role: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly role_id: CodecTypes['pg/int4@1']['output'];
+      readonly server_id: CodecTypes['pg/int4@1']['output'];
       readonly user_id: CodecTypes['pg/int4@1']['output'];
     };
     readonly user: {
@@ -357,10 +611,61 @@ export type StorageColumnTypes = {
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly userId: CodecTypes['pg/int4@1']['output'];
     };
+    readonly voice_session: {
+      readonly camera_enabled: CodecTypes['pg/bool@1']['output'];
+      readonly channel_id: CodecTypes['pg/int4@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly joined_at: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly left_at: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly microphone_enabled: CodecTypes['pg/bool@1']['output'];
+      readonly screen_sharing: CodecTypes['pg/bool@1']['output'];
+      readonly user_id: CodecTypes['pg/int4@1']['output'];
+    };
   };
 };
 export type StorageColumnInputTypes = {
   readonly public: {
+    readonly channel: {
+      readonly created_at: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly isPrivate: CodecTypes['pg/bool@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly position: CodecTypes['pg/int4@1']['input'] | null;
+      readonly server_id: CodecTypes['pg/int4@1']['input'];
+      readonly type: 'text' | 'voice';
+    };
+    readonly channel_message: {
+      readonly channel_id: CodecTypes['pg/int4@1']['input'];
+      readonly content: CodecTypes['pg/text@1']['input'];
+      readonly created_at: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly deleted_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly edited_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly reply_to_message_id: CodecTypes['pg/int4@1']['input'] | null;
+      readonly sender_id: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly conversation: {
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly lastMessageAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+    };
+    readonly conversationMember: {
+      readonly conversationId: CodecTypes['pg/int4@1']['input'];
+      readonly joinedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly lastReadMessageId: CodecTypes['pg/int4@1']['input'] | null;
+      readonly userId: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly directMessage: {
+      readonly content: CodecTypes['pg/text@1']['input'];
+      readonly conversationId: CodecTypes['pg/int4@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly deletedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly editedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly messageType: 'text' | 'image' | 'video' | 'voice' | 'file';
+      readonly replyToMessageId: CodecTypes['pg/int4@1']['input'] | null;
+      readonly senderId: CodecTypes['pg/int4@1']['input'];
+    };
     readonly emailVerificationOTP: {
       readonly attempt_count: CodecTypes['pg/int4@1']['input'];
       readonly consumed_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
@@ -370,12 +675,49 @@ export type StorageColumnInputTypes = {
       readonly otp_hash: CodecTypes['pg/text@1']['input'];
       readonly user_id: CodecTypes['pg/int4@1']['input'];
     };
+    readonly messageReceipt: {
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly deliveredAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly messageId: CodecTypes['pg/int4@1']['input'];
+      readonly seenAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly userId: CodecTypes['pg/int4@1']['input'];
+    };
     readonly refreshToken: {
       readonly expires_at: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly hash_refresh_token: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly revoked_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly token_id: CodecTypes['pg/text@1']['input'];
+      readonly user_id: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly role: {
+      readonly color: CodecTypes['pg/text@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly isDefault: CodecTypes['pg/bool@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly permissions: CodecTypes['pg/int4@1']['input'];
+      readonly position: CodecTypes['pg/int4@1']['input'];
+      readonly server_id: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly server: {
+      readonly created_at: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly description: CodecTypes['pg/text@1']['input'] | null;
+      readonly icon_url: CodecTypes['pg/text@1']['input'] | null;
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly owner_id: CodecTypes['pg/int4@1']['input'];
+      readonly visibility: 'public' | 'private';
+    };
+    readonly server_member: {
+      readonly joined_at: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly nickname: CodecTypes['pg/text@1']['input'] | null;
+      readonly server_id: CodecTypes['pg/int4@1']['input'];
+      readonly user_id: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly server_member_role: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly role_id: CodecTypes['pg/int4@1']['input'];
+      readonly server_id: CodecTypes['pg/int4@1']['input'];
       readonly user_id: CodecTypes['pg/int4@1']['input'];
     };
     readonly user: {
@@ -397,6 +739,16 @@ export type StorageColumnInputTypes = {
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly userId: CodecTypes['pg/int4@1']['input'];
     };
+    readonly voice_session: {
+      readonly camera_enabled: CodecTypes['pg/bool@1']['input'];
+      readonly channel_id: CodecTypes['pg/int4@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly joined_at: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly left_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly microphone_enabled: CodecTypes['pg/bool@1']['input'];
+      readonly screen_sharing: CodecTypes['pg/bool@1']['input'];
+      readonly user_id: CodecTypes['pg/int4@1']['input'];
+    };
   };
 };
 export type TypeMaps = TypeMapsType<
@@ -417,6 +769,428 @@ type ContractBase = Omit<
         readonly kind: 'postgres-schema';
         readonly entries: {
           readonly table: {
+            readonly channel: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly server_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly name: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly type: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'text'>;
+                  };
+                };
+                readonly isPrivate: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly position: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'channel_server_id_idx_f26850fd';
+                  readonly prefix: 'channel_server_id_idx';
+                  readonly columns: readonly ['server_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'channel';
+                    readonly columns: readonly ['server_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'server';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly channel_message: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly channel_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly sender_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly reply_to_message_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly content: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly edited_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: true;
+                };
+                readonly deleted_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: true;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'channel_message_channel_id_idx_b453dbf7';
+                  readonly prefix: 'channel_message_channel_id_idx';
+                  readonly columns: readonly ['channel_id'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'channel_message_sender_id_created_at_idx_78d26d1d';
+                  readonly prefix: 'channel_message_sender_id_created_at_idx';
+                  readonly columns: readonly ['sender_id', 'created_at'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'channel_message_reply_to_message_id_idx_436a0c22';
+                  readonly prefix: 'channel_message_reply_to_message_id_idx';
+                  readonly columns: readonly ['reply_to_message_id'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'channel_message_sender_id_idx_311853a4';
+                  readonly prefix: 'channel_message_sender_id_idx';
+                  readonly columns: readonly ['sender_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'channel_message';
+                    readonly columns: readonly ['channel_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'channel';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'channel_message';
+                    readonly columns: readonly ['sender_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'user';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'channel_message';
+                    readonly columns: readonly ['reply_to_message_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'channel_message';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly conversation: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly createdAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly lastMessageAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: true;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
+            readonly conversationMember: {
+              columns: {
+                readonly conversationId: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly userId: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly joinedAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly lastReadMessageId: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['conversationId', 'userId'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'conversationMember_userId_joinedAt_idx_2b8621c7';
+                  readonly prefix: 'conversationMember_userId_joinedAt_idx';
+                  readonly columns: readonly ['userId', 'joinedAt'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'conversationMember_conversationId_idx_669215a6';
+                  readonly prefix: 'conversationMember_conversationId_idx';
+                  readonly columns: readonly ['conversationId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'conversationMember_userId_idx_a489d58a';
+                  readonly prefix: 'conversationMember_userId_idx';
+                  readonly columns: readonly ['userId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'conversationMember';
+                    readonly columns: readonly ['conversationId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'conversation';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'conversationMember';
+                    readonly columns: readonly ['userId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'user';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly directMessage: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly conversationId: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly senderId: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly content: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly messageType: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'text'>;
+                  };
+                };
+                readonly createdAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly editedAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: true;
+                };
+                readonly deletedAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: true;
+                };
+                readonly replyToMessageId: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'directMessage_conversationId_createdAt_idx_44d4ac61';
+                  readonly prefix: 'directMessage_conversationId_createdAt_idx';
+                  readonly columns: readonly ['conversationId', 'createdAt'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'directMessage_senderId_createdAt_idx_ed252b01';
+                  readonly prefix: 'directMessage_senderId_createdAt_idx';
+                  readonly columns: readonly ['senderId', 'createdAt'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'directMessage_replyToMessageId_idx_dcef6925';
+                  readonly prefix: 'directMessage_replyToMessageId_idx';
+                  readonly columns: readonly ['replyToMessageId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'directMessage_conversationId_idx_669215a6';
+                  readonly prefix: 'directMessage_conversationId_idx';
+                  readonly columns: readonly ['conversationId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'directMessage_senderId_idx_4689c490';
+                  readonly prefix: 'directMessage_senderId_idx';
+                  readonly columns: readonly ['senderId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'directMessage';
+                    readonly columns: readonly ['conversationId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'conversation';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'directMessage';
+                    readonly columns: readonly ['senderId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'user';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'directMessage';
+                    readonly columns: readonly ['replyToMessageId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'directMessage';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly emailVerificationOTP: {
               columns: {
                 readonly id: {
@@ -489,6 +1263,84 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly messageReceipt: {
+              columns: {
+                readonly messageId: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly userId: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly createdAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly deliveredAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: true;
+                };
+                readonly seenAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: true;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['messageId', 'userId'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'messageReceipt_userId_seenAt_idx_9d70206a';
+                  readonly prefix: 'messageReceipt_userId_seenAt_idx';
+                  readonly columns: readonly ['userId', 'seenAt'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'messageReceipt_messageId_idx_3cdded8d';
+                  readonly prefix: 'messageReceipt_messageId_idx';
+                  readonly columns: readonly ['messageId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'messageReceipt_userId_idx_a489d58a';
+                  readonly prefix: 'messageReceipt_userId_idx';
+                  readonly columns: readonly ['userId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'messageReceipt';
+                    readonly columns: readonly ['messageId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'directMessage';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'messageReceipt';
+                    readonly columns: readonly ['userId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'user';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly refreshToken: {
               columns: {
                 readonly id: {
@@ -546,6 +1398,294 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'user';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly role: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly server_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly name: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly color: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', '#99AAB5'>;
+                  };
+                };
+                readonly permissions: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+                readonly position: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly isDefault: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'role_server_id_idx_f26850fd';
+                  readonly prefix: 'role_server_id_idx';
+                  readonly columns: readonly ['server_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'role';
+                    readonly columns: readonly ['server_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'server';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly server: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly name: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly description: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly icon_url: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly visibility: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'public'>;
+                  };
+                };
+                readonly owner_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['name'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'server_owner_id_created_at_idx_87a2ee28';
+                  readonly prefix: 'server_owner_id_created_at_idx';
+                  readonly columns: readonly ['owner_id', 'created_at'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'server_owner_id_idx_ade9f347';
+                  readonly prefix: 'server_owner_id_idx';
+                  readonly columns: readonly ['owner_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'server';
+                    readonly columns: readonly ['owner_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'user';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly server_member: {
+              columns: {
+                readonly server_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly user_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly nickname: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly joined_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['server_id', 'user_id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'server_member_user_id_idx_6c952402';
+                  readonly prefix: 'server_member_user_id_idx';
+                  readonly columns: readonly ['user_id'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'server_member_server_id_idx_f26850fd';
+                  readonly prefix: 'server_member_server_id_idx';
+                  readonly columns: readonly ['server_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'server_member';
+                    readonly columns: readonly ['server_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'server';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'server_member';
+                    readonly columns: readonly ['user_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'user';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly server_member_role: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly server_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly user_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly role_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['server_id', 'user_id'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'server_member_role_role_id_idx_d9467c50';
+                  readonly prefix: 'server_member_role_role_id_idx';
+                  readonly columns: readonly ['role_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'server_member_role';
+                    readonly columns: readonly ['server_id', 'user_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'server_member';
+                    readonly columns: readonly ['server_id', 'user_id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'server_member_role';
+                    readonly columns: readonly ['role_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'role';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -676,6 +1816,70 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly voice_session: {
+              columns: {
+                readonly camera_enabled: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly channel_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly joined_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                };
+                readonly left_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: true;
+                };
+                readonly microphone_enabled: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                };
+                readonly screen_sharing: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly user_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
           };
           readonly valueSet: {
             readonly ChannelType: {
@@ -718,11 +1922,345 @@ type ContractBase = Omit<
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'RefreshToken';
     };
+    readonly server: { readonly namespace: 'public' & NamespaceId; readonly model: 'Server' };
+    readonly server_member: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'ServerMember';
+    };
+    readonly channel: { readonly namespace: 'public' & NamespaceId; readonly model: 'Channel' };
+    readonly channel_message: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'Message';
+    };
+    readonly role: { readonly namespace: 'public' & NamespaceId; readonly model: 'Role' };
+    readonly server_member_role: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'ServerMemberRole';
+    };
+    readonly conversation: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'Conversation';
+    };
+    readonly conversationMember: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'ConversationMember';
+    };
+    readonly directMessage: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'DirectMessage';
+    };
+    readonly messageReceipt: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'MessageReceipt';
+    };
+    readonly voice_session: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'LegacyVoiceSession';
+    };
   };
   readonly domain: {
     readonly namespaces: {
       readonly public: {
         readonly models: {
+          readonly Channel: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly serverId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly type: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly isPrivate: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly position: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly messages: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Message';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['channelId'];
+                };
+              };
+              readonly server: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Server';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['serverId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'channel';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly serverId: { readonly column: 'server_id' };
+                readonly name: { readonly column: 'name' };
+                readonly type: { readonly column: 'type' };
+                readonly isPrivate: { readonly column: 'isPrivate' };
+                readonly position: { readonly column: 'position' };
+                readonly createdAt: { readonly column: 'created_at' };
+              };
+            };
+          };
+          readonly Conversation: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly lastMessageAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly members: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ConversationMember';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['conversationId'];
+                };
+              };
+              readonly messages: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'DirectMessage';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['conversationId'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'conversation';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly lastMessageAt: { readonly column: 'lastMessageAt' };
+              };
+            };
+          };
+          readonly ConversationMember: {
+            readonly fields: {
+              readonly conversationId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly joinedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly lastReadMessageId: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly conversation: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Conversation';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['conversationId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'conversationMember';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly conversationId: { readonly column: 'conversationId' };
+                readonly userId: { readonly column: 'userId' };
+                readonly joinedAt: { readonly column: 'joinedAt' };
+                readonly lastReadMessageId: { readonly column: 'lastReadMessageId' };
+              };
+            };
+          };
+          readonly DirectMessage: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly conversationId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly senderId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly content: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly messageType: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly editedAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly deletedAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly replyToMessageId: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly conversation: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Conversation';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['conversationId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly receipts: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'MessageReceipt';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['messageId'];
+                };
+              };
+              readonly replies: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'DirectMessage';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['replyToMessageId'];
+                };
+              };
+              readonly replyTo: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'DirectMessage';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['replyToMessageId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly sender: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['senderId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'directMessage';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly conversationId: { readonly column: 'conversationId' };
+                readonly senderId: { readonly column: 'senderId' };
+                readonly content: { readonly column: 'content' };
+                readonly messageType: { readonly column: 'messageType' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly editedAt: { readonly column: 'editedAt' };
+                readonly deletedAt: { readonly column: 'deletedAt' };
+                readonly replyToMessageId: { readonly column: 'replyToMessageId' };
+              };
+            };
+          };
           readonly EmailVerificationOTP: {
             readonly fields: {
               readonly id: {
@@ -787,6 +2325,230 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly LegacyVoiceSession: {
+            readonly fields: {
+              readonly camera_enabled: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly channel_id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly joined_at: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly left_at: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly microphone_enabled: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly screen_sharing: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly user_id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: Record<string, never>;
+            readonly storage: {
+              readonly table: 'voice_session';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly camera_enabled: { readonly column: 'camera_enabled' };
+                readonly channel_id: { readonly column: 'channel_id' };
+                readonly id: { readonly column: 'id' };
+                readonly joined_at: { readonly column: 'joined_at' };
+                readonly left_at: { readonly column: 'left_at' };
+                readonly microphone_enabled: { readonly column: 'microphone_enabled' };
+                readonly screen_sharing: { readonly column: 'screen_sharing' };
+                readonly user_id: { readonly column: 'user_id' };
+              };
+            };
+          };
+          readonly Message: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly channelId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly authorId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly replyToMessageId: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly content: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly editedAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly deletedAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly author: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['authorId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly channel: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Channel';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['channelId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly replies: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Message';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['replyToMessageId'];
+                };
+              };
+              readonly replyTo: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Message';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['replyToMessageId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'channel_message';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly channelId: { readonly column: 'channel_id' };
+                readonly authorId: { readonly column: 'sender_id' };
+                readonly replyToMessageId: { readonly column: 'reply_to_message_id' };
+                readonly content: { readonly column: 'content' };
+                readonly createdAt: { readonly column: 'created_at' };
+                readonly editedAt: { readonly column: 'edited_at' };
+                readonly deletedAt: { readonly column: 'deleted_at' };
+              };
+            };
+          };
+          readonly MessageReceipt: {
+            readonly fields: {
+              readonly messageId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly deliveredAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly seenAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly message: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'DirectMessage';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['messageId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'messageReceipt';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly messageId: { readonly column: 'messageId' };
+                readonly userId: { readonly column: 'userId' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly deliveredAt: { readonly column: 'deliveredAt' };
+                readonly seenAt: { readonly column: 'seenAt' };
+              };
+            };
+          };
           readonly RefreshToken: {
             readonly fields: {
               readonly id: {
@@ -843,6 +2605,279 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly Role: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly serverId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly color: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly permissions: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly position: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly isDefault: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+            };
+            readonly relations: {
+              readonly members: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ServerMemberRole';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['roleId'];
+                };
+              };
+              readonly server: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Server';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['serverId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'role';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly serverId: { readonly column: 'server_id' };
+                readonly name: { readonly column: 'name' };
+                readonly color: { readonly column: 'color' };
+                readonly permissions: { readonly column: 'permissions' };
+                readonly position: { readonly column: 'position' };
+                readonly isDefault: { readonly column: 'isDefault' };
+              };
+            };
+          };
+          readonly Server: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly description: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly iconUrl: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly visibility: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly ownerId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly channels: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Channel';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['serverId'];
+                };
+              };
+              readonly members: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ServerMember';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['serverId'];
+                };
+              };
+              readonly owner: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['ownerId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly roles: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Role' };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['serverId'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'server';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly name: { readonly column: 'name' };
+                readonly description: { readonly column: 'description' };
+                readonly iconUrl: { readonly column: 'icon_url' };
+                readonly visibility: { readonly column: 'visibility' };
+                readonly ownerId: { readonly column: 'owner_id' };
+                readonly createdAt: { readonly column: 'created_at' };
+              };
+            };
+          };
+          readonly ServerMember: {
+            readonly fields: {
+              readonly serverId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly nickname: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly joinedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly roleAssignments: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ServerMemberRole';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['serverId', 'userId'];
+                  readonly targetFields: readonly ['serverId', 'userId'];
+                };
+              };
+              readonly server: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Server';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['serverId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'server_member';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly serverId: { readonly column: 'server_id' };
+                readonly userId: { readonly column: 'user_id' };
+                readonly nickname: { readonly column: 'nickname' };
+                readonly joinedAt: { readonly column: 'joined_at' };
+              };
+            };
+          };
+          readonly ServerMemberRole: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly serverId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly roleId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly membership: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ServerMember';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['serverId', 'userId'];
+                  readonly targetFields: readonly ['serverId', 'userId'];
+                };
+              };
+              readonly role: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Role' };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['roleId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'server_member_role';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly serverId: { readonly column: 'server_id' };
+                readonly userId: { readonly column: 'user_id' };
+                readonly roleId: { readonly column: 'role_id' };
+              };
+            };
+          };
           readonly User: {
             readonly fields: {
               readonly id: {
@@ -889,6 +2924,39 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
+              readonly authored_messages: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Message';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['authorId'];
+                };
+              };
+              readonly conversation_memberships: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ConversationMember';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['userId'];
+                };
+              };
+              readonly direct_messages: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'DirectMessage';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['senderId'];
+                };
+              };
               readonly email_verification_otps: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -900,6 +2968,28 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['user_id'];
                 };
               };
+              readonly message_receipts: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'MessageReceipt';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['userId'];
+                };
+              };
+              readonly owned_servers: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Server';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['ownerId'];
+                };
+              };
               readonly refreshToken: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -909,6 +2999,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['user_id'];
+                };
+              };
+              readonly server_memberships: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ServerMember';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['userId'];
                 };
               };
               readonly user_auth_provider: {
