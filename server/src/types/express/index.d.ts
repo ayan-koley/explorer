@@ -15,6 +15,7 @@ declare global {
     }
     export interface Request {
       user?: RequestUser,
+      authUser?: RequestUser,
       token?: RequestToken
     }
   }
