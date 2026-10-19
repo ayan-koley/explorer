@@ -13,7 +13,7 @@ export const verifyJWT = async(req: Request, res: Response, next: NextFunction) 
 
         const user = verifyAccessToken(token);
 
-        req.user = user;
+        req.authUser = user;
 
         next();
 
