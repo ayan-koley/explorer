@@ -18,6 +18,7 @@ import {
   getServerPermissions,
 } from "./server.permissions.js";
 import { routeIntParam } from "../../utils/routeParam.js";
+import { uploadImage } from "../../utils/imagekit.js";
 
 const createServer = asyncHandler(async (req: Request, res: Response) => {
   if (!req.authUser)
@@ -144,6 +145,20 @@ const updateServer = asyncHandler(async (req: Request, res: Response) => {
     input.data,
   );
   return res.json(ApiResponse.success(updated, "Server updated"));
+});
+
+const updateServerIcon = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.authUser)
+    return res.status(401).json(ApiResponse.error("Authentication required"));
+  if (!req.file)
+    return res.status(400).json(ApiResponse.error("Choose an image to upload."));
+  const serverId = routeIntParam(req, "serverId");
+  const server = await db.orm.public.Server.first({ id: serverId });
+  if (!server)
+    return res.status(404).json(ApiResponse.error("Server not found"));
+  const uploaded = await uploadImage(req.file, "server-icons", serverId);
+  await db.orm.public.Server.where({ id: serverId }).update({ iconUrl: uploaded.url });
+  return res.json(ApiResponse.success({ iconUrl: uploaded.url }, "Server icon updated"));
 });
 
 //TODO: bug on delete server
@@ -506,6 +521,7 @@ export {
   discoverServers,
   getServer,
   updateServer,
+  updateServerIcon,
   deleteServer,
   joinServer,
   leaveServer,
