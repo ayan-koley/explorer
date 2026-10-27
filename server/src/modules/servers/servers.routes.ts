@@ -2,11 +2,12 @@ import { Router } from 'express';
 import { verifyJWT } from '../../middlewares/verifyJWT.js';
 import { requirePermission } from '../../middlewares/permission.middlewares.js';
 import {
-  createServer, listMyServers, discoverServers, getServer, updateServer, deleteServer, joinServer, leaveServer,
+  createServer, listMyServers, discoverServers, getServer, updateServer, updateServerIcon, deleteServer, joinServer, leaveServer,
   listMembers, removeMember, updateNickname, listRoles, createRole, updateRole, deleteRole, assignRole,
 } from './servers.controllers.js';
 import { Permission } from './server.permissions.js';
 import channelsRoutes from '../channels/channels.routes.js';
+import { imageUpload } from '../../middlewares/imageUpload.js';
 
 const router = Router();
 router.use(verifyJWT);
@@ -33,6 +34,7 @@ router.post('/', createServer);
 router.use('/:serverId/channels', channelsRoutes);
 router.get('/:serverId', getServer);
 router.patch('/:serverId', requirePermission(Permission.MANAGE_SERVER), updateServer);
+router.post('/:serverId/icon', requirePermission(Permission.MANAGE_SERVER), imageUpload, updateServerIcon);
 router.delete('/:serverId', requirePermission(Permission.MANAGE_SERVER), deleteServer);
 router.post('/:serverId/join', joinServer);
 router.delete('/:serverId/leave', leaveServer);
