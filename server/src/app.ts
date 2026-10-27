@@ -1,7 +1,8 @@
 import express, { urlencoded } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'
-import { Request, Response} from 'express'
+import { NextFunction, Request, Response} from 'express'
+import { ApiResponse } from './utils/ApiResponse.js'
 
 const app = express();
 
@@ -34,4 +35,15 @@ app.use("/api/v1/oauth", oauthRoutes);
 app.use("/api/v1/servers", serverRoutes);
 app.use("/api/v1", messageRoutes);
 app.use("/api/v1/direct", directMessageRoutes);
+
+app.use((error: { status?: number }, _req: Request, res: Response, next: NextFunction) => {
+    if (res.headersSent) return next(error);
+    const status = error.status === 503 ? 503 : error.status === 502 ? 502 : 500;
+    const message = status === 503
+        ? 'Image uploads are not configured. Add IMAGEKIT_PRIVATE_KEY to the server environment.'
+        : status === 502
+            ? 'Image upload service failed. Check the ImageKit configuration and try again.'
+            : 'The server could not complete the request.';
+    return res.status(status).json(ApiResponse.error(message));
+});
 export default app;
