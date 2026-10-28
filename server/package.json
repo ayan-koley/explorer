@@ -12,6 +12,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@imagekit/nodejs": "^7.13.0",
     "@prisma/orm-postgres": "^8.0.0-rc.8",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
@@ -19,10 +20,12 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.4.0",
     "passport": "^0.7.0",
     "passport-github2": "^0.1.12",
     "passport-google-oauth20": "^2.0.0",
     "resend": "^6.32.1",
+    "socket.io": "^4.8.4",
     "ws": "^8.21.3",
     "zod": "^4.6.2"
   },
@@ -33,6 +36,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.3.0",
     "@types/node": "^26.5.0",
     "@types/passport": "^1.0.17",
     "@types/passport-github2": "^1.2.9",
